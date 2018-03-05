@@ -16,7 +16,7 @@ module Algebra_lineal
 
 implicit none 
 
-contains 
+contains !Hola marcos como esta espero que bien¡¡¡
 
 subroutine Producto(A,B,AxB,info)
 
