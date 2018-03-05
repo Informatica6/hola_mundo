@@ -8,7 +8,7 @@ LD = gfortran
 FFLAGS  = -fbounds-check
 
 # COMMAND TO DELETE (Windows=del, MacOS=rm)
-RM = rm
+RM = rm 
 
 SRC  = modulo.f95 main.f95 
 
