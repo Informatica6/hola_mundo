@@ -346,10 +346,10 @@ do l=1,p
     enddo
 enddo
 
-do l=1,p 
+do l=1,p
     SUMAB=0
     do i=1,n
-        SUMAB=SUMAB+(dato(i,2)*dato(i,1)**(l-1)) 
+        SUMAB=SUMAB+(dato(i,1)**(l-1)*(dato(i,2))) 
     enddo
     B(l)=SUMAB
 enddo
