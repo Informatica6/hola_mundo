@@ -16,7 +16,7 @@ module Algebra_lineal
 
 implicit none 
 
-contains !fdsafsdafgdsg
+contains !eres un puto
 
 subroutine Producto(A,B,AxB,info)
 
