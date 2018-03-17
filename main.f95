@@ -1,17 +1,9 @@
 program main
 
-    use algebra_lineal
+use funciones
 
-    real(8),allocatable     :: A(:)
-    integer                 :: n
+real(8),parameter :: h=10**(-3)
 
-read(*,*) n
-    call MiniCu(A)
-    
-do i=1,n
-
-write(*,*) A(i)
-
-enddo
+write(*,*) derivada_centrada(h)
 
 end program main

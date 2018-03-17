@@ -91,55 +91,55 @@ subroutine Inversa (A,AI)
     Ab(1:m,1:m) = A
     Ab(1:m,m+1:2*m) = Id
 
-!Triangulación por abajo
-do i = 1, m-1
-    if (abs(Ab(i,i)) < epsilon(1.d0)) then
-        do t = 1, m-i
-            if(Ab(i+t,i)/=0) then !| Pivote Parcial
+    !Triangulación por abajo
+    do i = 1, m-1
+        if (abs(Ab(i,i)) < epsilon(1.d0)) then
+            do t = 1, m-i
+                if(Ab(i+t,i)/=0) then !| Pivote Parcial
 
-                VT(:)=Ab(i,:) !Vector donde se guarda temporalmente una fila
+                    VT(:)=Ab(i,:) !Vector donde se guarda temporalmente una fila
 
-                Ab(i,:) = Ab(i+t,:) !|   Cambiador 
-                Ab(i+t,:) = VT(:)   !|   de filas 
+                    Ab(i,:) = Ab(i+t,:) !|   Cambiador 
+                    Ab(i+t,:) = VT(:)   !|   de filas 
 
-            endif
-        enddo 
-    endif
+                endif
+            enddo 
+        endif
         
-    do  k = i+1,m                        !| filas por debajo   
-        h = Ab(k,i)/Ab(i,i)              !| Factor que multiplica la fila i
-        Ab(k,:) = Ab(k,:) - h*Ab(i,:)
+        do  k = i+1,m                        !| filas por debajo   
+            h = Ab(k,i)/Ab(i,i)              !| Factor que multiplica la fila i
+            Ab(k,:) = Ab(k,:) - h*Ab(i,:)
+        enddo
+
+    count=0
+        do l =1,m 
+            if(Ab(i,i)==0) count=count+1 !| Cuando el contador sea igual que la dimension 
+        enddo                            !| de la matriz entonces la diagonal esta llena de 0   
+
+        if(count==m) then                       !| Detección de que no existe inversa 
+            write(*,*) '----------------'
+            write(*,*) 'No tiene inversa'
+            write(*,*) 
+            stop 
+        endif
+        
     enddo
 
-count=0
-    do l =1,m 
-        if(Ab(i,i)==0) count=count+1 !| Cuando el contador sea igual que la dimension 
-    enddo                            !| de la matriz entonces la diagonal esta llena de 0   
+    !Triangulación por arriba
+    do i = m,2,-1
+        do k = i-1,1,-1
+            h=0
+            h = Ab(k,i)/Ab(i,i)              
+            Ab(k,:) = Ab(k,:) - h*Ab(i,:)
+        enddo
+    enddo
 
-    if(count==m) then                       !| Detección de que no existe inversa 
-        write(*,*) '----------------'
-        write(*,*) 'No tiene inversa'
-        write(*,*) 
-        stop 
-    endif
-        
-enddo
-
-!Triangulación por arriba
-do i = m,2,-1
-    do k = i-1,1,-1
+    !Hacer unos en la diagonal
+    do i=1,m
         h=0
-        h = Ab(k,i)/Ab(i,i)              
-        Ab(k,:) = Ab(k,:) - h*Ab(i,:)
+        h=Ab(i,i) 
+        Ab(i,:)=Ab(i,:)/h
     enddo
-enddo
-
-!Hacer unos en la diagonal
-do i=1,m
-    h=0
-    h=Ab(i,i) 
-    Ab(i,:)=Ab(i,:)/h
-enddo
 
     AI=Ab(1:m,m+1:2*m) !Descartando  las matriz identidad
 
@@ -187,7 +187,7 @@ subroutine Gauss(A,b,x)
         enddo
     enddo
 
-!Sustitución
+    !Sustitución
     do  i = m,1,-1
         h = Ab(i,m+1) ! keeping value of the extended column on h 
             
@@ -325,36 +325,36 @@ subroutine MiniCu(A)
     write(*,*) 'Numero de elementos que quieres el primero empieza en x^0'
     read(*,*) p !Grado del polinomio
 
-open(unit=1, file='data_file.dat', status='old')
-read(1,*) n !Determinando el numero de puntos 
+    open(unit=1, file='data_file.dat', status='old')
+    read(1,*) n !Determinando el numero de puntos 
 
-allocate(M(p,p),B(p),A(p),Dato(n,2)) 
+    allocate(M(p,p),B(p),A(p),Dato(n,2)) 
 
-do i=1,n
-    read(1,*) dato(i,:) !leyendo los puntos en el vector datos(:,1:2)
-enddo
-
-close(1) ! Cierre del documento
-
-do l=1,p
-    do k=1,p
-    SUMAM=0
-        do i=1,n
-            SUMAM=SUMAM+((dato(i,1)**(l-1))*(dato(i,1)**(k-1))) 
-        enddo
-    M(l,k)=SUMAM
-    enddo
-enddo
-
-do l=1,p
-    SUMAB=0
     do i=1,n
-        SUMAB=SUMAB+(dato(i,1)**(l-1)*(dato(i,2))) 
+        read(1,*) dato(i,:) !leyendo los puntos en el vector datos(:,1:2)
     enddo
-    B(l)=SUMAB
-enddo
 
-call Gauss(M,B,A)
+    close(1) ! Cierre del documento
+
+    do l=1,p
+        do k=1,p
+        SUMAM=0
+            do i=1,n
+                SUMAM=SUMAM+((dato(i,1)**(l-1))*(dato(i,1)**(k-1))) 
+            enddo
+        M(l,k)=SUMAM
+        enddo
+    enddo
+
+    do l=1,p
+        SUMAB=0
+        do i=1,n
+            SUMAB=SUMAB+(dato(i,1)**(l-1)*(dato(i,2))) 
+        enddo
+        B(l)=SUMAB
+    enddo
+
+    call Gauss(M,B,A)
 
 end subroutine
 !-------------------------------------------------------------------------------------------------------------- 
@@ -554,5 +554,4 @@ Subroutine Autovalores(A,b,tol,Autovalor)
 
 end subroutine 
 !-------------------------------------------------------------------------------------------------------------------
-
 end module

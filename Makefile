@@ -10,7 +10,7 @@ FFLAGS  = -fbounds-check
 # COMMAND TO DELETE (Windows=del, MacOS=rm)
 RM = rm 
 
-SRC  = modulo.f95 main.f95 
+SRC  = moduloF.f95 main.f95 
 
 OBJ  = $(SRC:.f95=.o)
 EXE  = executable
