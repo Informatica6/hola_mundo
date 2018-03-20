@@ -1,41 +1,45 @@
-module funciones 
+module Derivadas 
 
 contains 
 
-function mi_funcion(x)
+function F(x)
 
-    Real(8), intent(in)     :: x
+    Real(8),intent(in)          :: X
 
-    Real(8)                 :: mi_funcion 
+    Real(8)                     :: F 
 
-    mi_funcion = 10.d0*x**2*exp(-x**2)
-
+    F = x**2
 
 end function 
 
-function derivada_centrada(h)
+function derivada_progresiva(Y,x,h)
 
+    Real(8),intent(in)              :: Y,X,h
 
-    real(8),intent(in)              :: h
+    Real(8)                         :: derivada_progresiva
 
-    integer                         :: x
-    real(8)                        :: derivada_centrada
-    real(8), allocatable            :: Y(:)
-    integer                         :: a,b,i
+    derivada_progresiva = (F(X+h)-Y)/h
 
-    read(*,*) a,b
-    read(*,*) x
+end function 
 
-    allocate(Y(a:b))
+function derivada_regresiva(Y,x,h)
 
-    do i=a,b
-        Y(i) = mi_funcion(i-0.d0) 
-    enddo
+    Real(8),intent(in)              :: Y,X,h
 
+    Real(8)                         :: derivada_regresiva
 
-    derivada_centrada = (Y(x+1)-Y(x-1))/2*h
+    derivada_regresiva = (Y-F(X-h))/h
 
+end function
+
+function derivada_centrada(Y,x,h)
+
+    Real(8),intent(in)              :: Y,X,h
+
+    Real(8)                         :: derivada_centrada
+
+    derivada_centrada = (F(x+h)-F(x-h))/(2*h)
+
+end function
     
-end function 
-
 end module
