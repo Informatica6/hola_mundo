@@ -555,43 +555,43 @@ Subroutine Radio_espectral(A,b,tol,Autovalor) !llamamos radio espectral a el má
 end subroutine 
 !-------------------------------------------------------------------------------------------------------------------
 
-SUBROUTINE SIMPSON(a,b,n,I,F)
+subroutine Simpson(a,b,n,I,F)
 
-INTERFACE
-FUNCTION F(X)
+Interface
+function F(X)
 
-REAL,intent(in):: X
-REAL:: F
+real,intent(in):: X
+real:: F
 
-END FUNCTION
-END INTERFACE
+end function
+end interface
 
-INTEGER :: j,k
-INTEGER, INTENT(IN):: n
-REAL :: h,I1,I2
-REAL, INTENT(IN) :: a,b
-REAL, INTENT(OUT) :: I
+integer :: j,k
+integer, intent(in):: n
+real :: h,I1,I2
+real, intent(in) :: a,b
+real, intent(out) :: I
 
 h=(b-a)/n*1.0
 I1=0 
 I2=0
 
-DO j=1,n-1,2
+do j=1,n-1,2
 
 I1=I1+F(a+j*h)
 
 
-END DO
+end do
 
-DO k=2,n-2,2
+do k=2,n-2,2
 
 I2=I2+F(a+k*h)
 
-END DO
+end do
 
 I=(h/3)*(F(a)+4*I1+2*I2+F(b))
 
-END SUBROUTINE
+end subroutine
 
 
 !----------------------------------------------------------------------------------------------------------
