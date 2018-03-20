@@ -11,6 +11,7 @@
 ! Norma(Vector,n) hace el modulo de un vector de tamaño n--------------------------------------430
 ! GAUSS_SEIDEL(A,b,x,ITE) Ax=b, donde ITE es la iteraciones------------------------------------451
 ! Radio_espectral (A,b,tol,autovalor)----------------------------------------------------------515
+!Integracion por metodo de trapecio
 !----------------------------------------------------------------------------------------------------
 module Algebra_lineal
 
@@ -553,49 +554,45 @@ Subroutine Radio_espectral(A,b,tol,Autovalor) !llamamos radio espectral a el má
     Autovalor=suma/(norma(tv,n))**2 !Formula para obtener el autovalor
 
 end subroutine 
+
 !-------------------------------------------------------------------------------------------------------------------
 
 subroutine Simpson(a,b,n,I,F)
 
-Interface
-function F(X)
+    Interface !se utiliza para llamar a la funcion f(x), que es la que se va cambiando
+        function F(X)
 
-real,intent(in):: X
-real:: F
+        real,intent(in):: X
+        real:: F
 
-end function
-end interface
+        end function
+    end interface
 
 integer :: j,k
-integer, intent(in):: n
-real :: h,I1,I2
-real, intent(in) :: a,b
-real, intent(out) :: I
+integer, intent(in):: n !n es el numero de repeticiones de la integral
+real :: h,I1,I2 !h es la distacia entre dos divisiones
+real, intent(in) :: a,b !a y b son respectivamente el valor inicial y el valor final de x
+real, intent(out) :: I !solucion de la integral, el area
 
 h=(b-a)/n*1.0
 I1=0 
 I2=0
 
 do j=1,n-1,2
-
-I1=I1+F(a+j*h)
-
-
+    I1=I1+F(a+j*h)
 end do
 
 do k=2,n-2,2
-
-I2=I2+F(a+k*h)
-
+    I2=I2+F(a+k*h)
 end do
 
 I=(h/3)*(F(a)+4*I1+2*I2+F(b))
 
 end subroutine
 
-
 !----------------------------------------------------------------------------------------------------------
-subroutine integral(f,a,b,n,I)
+
+subroutine trapecio(f,a,b,n,I)
 
     interface
     function f(x)
@@ -622,9 +619,40 @@ subroutine integral(f,a,b,n,I)
     
     I=I+A2
     end do
-    end subroutine integral
+    end subroutine trapecio
 
 !------------------------------------------------------------------------------------------------------------
+
+subroutine Riemann(a,b,n,I,F)
+
+    Interface !se utiliza para llamar a la funcion f(x), que es la que se va cambiando
+        function F(X)
+
+        real,intent(in):: X
+        real:: F
+
+        end function
+    end interface
+
+integer :: j,k !OJO, no usar i para el bucle porque I es la solucion de la integral
+integer, intent(in):: n !n es el numero de divisiones del eje x de la parte que ocupa la curva
+real :: h,I1 !h es la distacia entre dos divisiones
+real, intent(in) :: a,b !a y b son respectivamente el valor inicial y el valor final de x
+real, intent(out) :: I !solucion de la integral, el area
+
+h=(b-a)/n*1.0
+I1=0 
+
+do j=1,n
+    I1=I1+F(a+j*h)
+end do
+
+I=I1*h
+
+end subroutine
+
+!-------------------------------------------------------------------------------------------------------
+
 function f1(x) !f1 es la funcion que se va a integrar !para el ejemplo de clase el intervalo optimo de integracion es 1000
     real,intent(in)::x
     real::f1
