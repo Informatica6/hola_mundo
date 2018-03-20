@@ -10,7 +10,7 @@
 ! Jacobi(A,b,Tol,x) Ax=b , donde tol es la tolerancia------------------------------------------362
 ! Norma(Vector,n) hace el modulo de un vector de tamaño n--------------------------------------430
 ! GAUSS_SEIDEL(A,b,x,ITE) Ax=b, donde ITE es la iteraciones------------------------------------451
-! Autovalores(A,b,tol,autovalor)----------------------------------------------------------------515
+! Radio_espectral (A,b,tol,autovalor)----------------------------------------------------------515
 !----------------------------------------------------------------------------------------------------
 module Algebra_lineal
 
@@ -512,7 +512,7 @@ subroutine GAUSS_SEIDEL(A,b,x,ITE) !ITE indica la iteraciones
 
 end subroutine
 !--------------------------------------------------------------------------------------------------------------------
-Subroutine Autovalores(A,b,tol,Autovalor) 
+Subroutine Radio_espectral(A,b,tol,Autovalor) 
 
     !Element in/out
     Real(8), intent(inout)          :: A(:,:)
