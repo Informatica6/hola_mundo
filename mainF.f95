@@ -4,16 +4,18 @@ program main
     
     real(8), allocatable            :: Y(:),X(:)
     Real(8)                         :: h,Ax
-    integer                         :: a,b,j,i
-    Integer, parameter              :: n=10000 !Indica la diferencia entre x(i) y x(i+1)
+    integer                         :: a,b
+    Integer, parameter              :: n=10000 !Termino para determinar Ax
+
+    Write(*,*) 'Bienvenido al cálculo de derivadas '
     
     Write(*,*) 'Intervalo que quieres'
-    read(*,*) a,b
+    read(*,*) a,b 
     
     Write(*,*) 'Precision de la derivada' 
     Read(*,*) h
     
-    Ax= (b-a)/(n-0.d0)
+    Ax= (b-a)/(n-0.d0) !Distancia entre x(i) y x(i+1)
 
     allocate(Y(n),X(n))
     
@@ -29,6 +31,7 @@ program main
     enddo
 
     close(10)
+
     open(unit=10, file='derivada_progresiva.txt', status='unknown') 
     
         do i=1,n
@@ -53,5 +56,5 @@ program main
     
     close(10)
     
-    end program main
+end program main
     
