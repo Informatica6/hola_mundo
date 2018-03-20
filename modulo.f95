@@ -512,7 +512,7 @@ subroutine GAUSS_SEIDEL(A,b,x,ITE) !ITE indica la iteraciones
 
 end subroutine
 !--------------------------------------------------------------------------------------------------------------------
-Subroutine Radio_espectral(A,b,tol,Autovalor) 
+Subroutine Radio_espectral(A,b,tol,Autovalor) !llamamos radio espectral a el máximo valor comparándolos en valor absoluto
 
     !Element in/out
     Real(8), intent(inout)          :: A(:,:)
@@ -554,4 +554,83 @@ Subroutine Radio_espectral(A,b,tol,Autovalor)
 
 end subroutine 
 !-------------------------------------------------------------------------------------------------------------------
-end module
+
+SUBROUTINE SIMPSON(a,b,n,I,F)
+
+INTERFACE
+FUNCTION F(X)
+
+REAL,intent(in):: X
+REAL:: F
+
+END FUNCTION
+END INTERFACE
+
+INTEGER :: j,k
+INTEGER, INTENT(IN):: n
+REAL :: h,I1,I2
+REAL, INTENT(IN) :: a,b
+REAL, INTENT(OUT) :: I
+
+h=(b-a)/n*1.0
+I1=0 
+I2=0
+
+DO j=1,n-1,2
+
+I1=I1+F(a+j*h)
+
+
+END DO
+
+DO k=2,n-2,2
+
+I2=I2+F(a+k*h)
+
+END DO
+
+I=(h/3)*(F(a)+4*I1+2*I2+F(b))
+
+END SUBROUTINE
+
+
+!----------------------------------------------------------------------------------------------------------
+subroutine integral(f,a,b,n,I)
+
+    interface
+    function f(x)
+    real,intent(in)::x
+    real::f
+    end function
+    end interface
+    
+    real,intent(inout)::a,b,n
+    real,intent(out)::I
+    real::x1,x2,h,A1,A2,j
+    
+    I=0
+    
+    do j=1,n
+      
+    x1=(a+((j-1)*ABS(a-b)/n))
+    x2=(a+(j*(ABS(a-b)/n)))
+    
+    h=((f(x2))-(f(x1)))
+    
+    A1=((x2-x1)*(f(x1)))
+    A2=((A1))+(((x2-x1))*((h)/(2)))
+    
+    I=I+A2
+    end do
+    end subroutine integral
+
+!------------------------------------------------------------------------------------------------------------
+function f1(x) !f1 es la funcion que se va a integrar !para el ejemplo de clase el intervalo optimo de integracion es 1000
+    real,intent(in)::x
+    real::f1
+    
+    f1=(EXP(-x**2))
+    
+end function
+    
+end module Algebra_lineal
