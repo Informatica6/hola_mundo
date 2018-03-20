@@ -8,7 +8,7 @@ function F(x)
 
     Real(8)                     :: F 
 
-    F = x**2
+    F = 10*x**2*exp(-x**2)
 
 end function 
 
