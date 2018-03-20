@@ -33,7 +33,7 @@ function derivada_centrada(h)
     enddo
 
 
-    derivada_centrada = (Y(x+1)-Y(x-1))/2
+    derivada_centrada = (Y(x+1)-Y(x-1))/2*h
 
     
 end function 
