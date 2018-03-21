@@ -560,22 +560,22 @@ end subroutine
 
 !-------------------------------------------------------------------------------------------------------------------
 
-subroutine Simpson(a,b,n,I,F)
+subroutine Simpson(a,b,n,It1,F)
 
     Interface !se utiliza para llamar a la funcion f(x), que es la que se va cambiando
         function F(X)
 
-        real,intent(in):: X
-        real:: F
+        real(8),intent(in):: X
+        real(8):: F
 
         end function
     end interface
 
 integer :: j,k
 integer, intent(in):: n !n es el numero de repeticiones de la integral
-real :: h,I1,I2 !h es la distacia entre dos divisiones
-real, intent(in) :: a,b !a y b son respectivamente el valor inicial y el valor final de x
-real, intent(out) :: I !solucion de la integral, el area
+real(8) :: h,I1,I2 !h es la distacia entre dos divisiones
+real(8), intent(in) :: a,b !a y b son respectivamente el valor inicial y el valor final de x
+real(8), intent(out) :: It1 !solucion de la integral, el area
 
 h=(b-a)/n*1.0
 I1=0 
@@ -589,26 +589,26 @@ do k=2,n-2,2
     I2=I2+F(a+k*h)
 end do
 
-I=(h/3)*(F(a)+4*I1+2*I2+F(b))
+It1=(h/3)*(F(a)+4*I1+2*I2+F(b))
 
 end subroutine
 
 !----------------------------------------------------------------------------------------------------------
 
-subroutine trapecio(f,a,b,n,I)
+subroutine trapecio(f,a,b,n,It2)
 
     interface
     function f(x)
-    real,intent(in)::x
-    real::f
+    real(8),intent(in)::x
+    real(8)::f
     end function
     end interface
     
-    real,intent(inout)::a,b,n
-    real,intent(out)::I
-    real::x1,x2,h,A1,A2,j
+    real(8),intent(inout)::a,b,n
+    real(8),intent(out)::It2
+    real(8)::x1,x2,h,A1,A2,j
     
-    I=0
+    It2=0
     
     do j=1,n
       
@@ -620,45 +620,46 @@ subroutine trapecio(f,a,b,n,I)
     A1=((x2-x1)*(f(x1)))
     A2=((A1))+(((x2-x1))*((h)/(2)))
     
-    I=I+A2
+    It2=It2+A2
     end do
     end subroutine trapecio
 
 !------------------------------------------------------------------------------------------------------------
 
-subroutine Riemann(a,b,n,I,F)
+subroutine Riemann(a,b,n,It3,F)
 
     Interface !se utiliza para llamar a la funcion f(x), que es la que se va cambiando
         function F(X)
 
-        real,intent(in):: X
-        real:: F
+        real(8),intent(in):: X
+        real(8):: F
 
         end function
     end interface
 
 integer :: j,k !OJO, no usar i para el bucle porque I es la solucion de la integral
 integer, intent(in):: n !n es el numero de divisiones del eje x de la parte que ocupa la curva
-real :: h,I1 !h es la distacia entre dos divisiones
-real, intent(in) :: a,b !a y b son respectivamente el valor inicial y el valor final de x
-real, intent(out) :: I !solucion de la integral, el area
+real(8) :: h,I1 !h es la distacia entre dos divisiones
+real(8), intent(in) :: a,b !a y b son respectivamente el valor inicial y el valor final de x
+real(8), intent(out) :: It3 !solucion de la integral, el area
 
 h=(b-a)/n*1.0
 I1=0 
+It3=0
 
 do j=1,n
     I1=I1+F(a+j*h)
 end do
 
-I=I1*h
+It3=I1*h
 
 end subroutine
 
 !-------------------------------------------------------------------------------------------------------
 
 function f1(x) !f1 es la funcion que se va a integrar !para el ejemplo de clase el intervalo optimo de integracion es 1000
-    real,intent(in)::x
-    real::f1
+    real(8),intent(in)::x
+    real(8)::f1
     
     f1=(EXP(-x**2))
     
