@@ -32,29 +32,31 @@ program main
 
     close(10)
 
-    open(unit=10, file='derivada_progresiva.txt', status='unknown') 
-    
-        do i=1,n
-            write(10,*) x(i), derivada_progresiva(Y(i),X(i),h)
-        enddo
-            
-    close(10)
-    
-    open(unit=10, file='derivada_regresiva.txt', status='unknown') 
-    
-        do i=1,n
-            write(10,*) x(i), derivada_regresiva(Y(i),X(i),h)
-        enddo
-            
-    close(10)
-    
     open(unit=10, file='derivada_centrada.txt', status='unknown') 
     
         do i=1,n
             write(10,*) x(i), derivada_centrada(Y(i),X(i),h)
         enddo
-    
+            
     close(10)
+    
+    open(unit=10, file='derivada_centrada_2.txt', status='unknown') 
+    
+        do i=1,n
+            write(10,*) x(i), derivada_centrada_2(Y(i),X(i),h)
+        enddo
+            
+    close(10)
+    
+    !open(unit=10, file='derivada_centrada.txt', status='unknown') 
+    
+        !do i=1,n
+           !write(10,*) x(i), derivada_centrada(Y(i),X(i),h)
+        !enddo
+    
+    !close(10)
+
+Write(*,*) 'Realizado con exito compruebe que tiene sus documentos con los puntos'
     
 end program main
     

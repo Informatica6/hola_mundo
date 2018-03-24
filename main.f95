@@ -1,29 +1,33 @@
 program main
 
-use algebra_lineal
+use Integracion
 
-real(8)::Xi,Xd,It1,It2,It3,n !para la integral por trapecios n se define como real y para la de simpson y Riemann como entero
-!integer :: n
+real(8)             :: a,b,It1,It2,I !para la integral por trapecios n se define como real y para la de simpson y Riemann como entero
+!integer            :: n
+character           :: contestacion 
 
-write(*,*)'elige un intervalo de integracion'
+1 write(*,*)'Intervalo de Integración'
 
-read(*,*)Xi !valor inicial de x
-read(*,*)Xd !valor final de x
+read(*,*) a,b 
 
-write(*,*)'el intervalo es:',Xi,Xd
-write(*,*)'elige un numero de subintervalos' 
+write(*,*)'¿El intervalo es correcto?',a,b 
+write(*,*) 'Y/N'
+read(*,*) contestacion 
 
-read(*,*)n
+if((contestacion=='n').or.(Contestacion=='N')) go to 1 
 
+!write(*,*)'elige un numero de subintervalos' 
 
-call trapecio(f1,Xi,Xd,n,It2)
-write(*,*)'el area de la integral por Trapecio es:',It2
+!read(*,*)n
 
-!call simpson(Xi,Xd,n,It1,f1)
+!call trapecio(f1,a,b,n,It2)
+!write(*,*)'el area de la integral por Trapecio es:',It2
+
+!call simpson(a,b,n,It1,f1)
 !write(*,*)'el area de la integral por Simpson es:',It1
 
-!call Riemann(Xi,Xd,n,It3,f1)
-!write(*,*)'el area de la integral por Riemann es:',It3
+call Riemann(a,b,I)
+write(*,*)'el area de la integral por Riemann es:',I
 
 
 end program main

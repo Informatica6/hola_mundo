@@ -1,28 +1,23 @@
 !------------------------------------------------------------------------------------------------------
 !                                       BIBLIOTECA WOLO                                                 
-! Producto(A,b,axb,info) matriz A,matriz b, axb multiplicacion --------------------------------25       
-! Potencia(A,k,Ak)  matriz A, k= pontencia a la que elevas, ak= matriz hecha la potencia-------51                                                                       
-! Inversa (A,AI) matriz A a la que quieres hacer la inversa Ai matriz inversa------------------75
-! Gauss(A,b,x) Ax=b----------------------------------------------------------------------------153
-! FactorizacionLU(A,Al,Au) A matriz que quieres factorizar en LU Al(lower), Au(upper)----------209
-! GaussFactorLU(A,b,X) Ax=b--------------------------------------------------------------------270
-! MiniCu(A) A devulve los coeficientes del polinomio-------------------------------------------319
-! Jacobi(A,b,Tol,x) Ax=b , donde tol es la tolerancia------------------------------------------366
-! Norma(Vector,n) hace el modulo de un vector de tamaño n--------------------------------------434
-! GAUSS_SEIDEL(A,b,x,ITE) Ax=b, donde ITE es la iteraciones------------------------------------455
-! Radio_espectral (A,b,tol,autovalor)----------------------------------------------------------519
-! Simpson(a,b,n,I,F)---------------------------------------------------------------------------563
-! Trapecio(f,a,b,n,I)--------------------------------------------------------------------------598
-! Riemann(a,b,n,I,F)---------------------------------------------------------------------------629
-! function f1(x) !f1 es la funcion que se va a integrar----------------------------------------659
+! Producto(A,b,axb,info) matriz A,matriz b, axb multiplicacion --------------------------------20      
+! Potencia(A,k,Ak)  matriz A, k= pontencia a la que elevas, ak= matriz hecha la potencia-------47                                                                       
+! Inversa (A,AI) matriz A a la que quieres hacer la inversa Ai matriz inversa------------------70
+! Gauss(A,b,x) Ax=b----------------------------------------------------------------------------148
+! FactorizacionLU(A,Al,Au) A matriz que quieres factorizar en LU Al(lower), Au(upper)----------203
+! GaussFactorLU(A,b,X) Ax=b--------------------------------------------------------------------262
+! MiniCu(A) A devulve los coeficientes del polinomio-------------------------------------------312
+! Jacobi(A,b,Tol,x) Ax=b , donde tol es la tolerancia------------------------------------------359
+! GAUSS_SEIDEL(A,b,x,ITE) Ax=b, donde ITE es la iteraciones------------------------------------427
+! Radio_espectral (A,b,tol,autovalor)----------------------------------------------------------492
 !----------------------------------------------------------------------------------------------------
 module Algebra_lineal
 
-implicit none 
+implicit none
 
 contains
 
-subroutine Producto(A,B,AxB,info)
+Subroutine Producto(A,B,AxB,info)
 
     !Variables de entrada/salida
     real, intent(in)        :: A(:,:)
@@ -46,9 +41,10 @@ subroutine Producto(A,B,AxB,info)
         stop
     endif 
 
-end subroutine 
-!------------------------------------------------------------------------------------------------------------------------------------------
-subroutine Potencia(A,k,Ak)
+End subroutine 
+!-----------------------------------------------------------------------------------------------------------
+
+Subroutine Potencia(A,k,Ak)
 
     !Variables de entrada/salida
     real, intent(in)        :: A(:,:)
@@ -68,11 +64,10 @@ subroutine Potencia(A,k,Ak)
         Ak = Akplus1
     enddo 
 
-end subroutine 
+End subroutine 
+!-----------------------------------------------------------------------------------------------------------
 
-!-------------------------------------------------------------------------------------------------------------------------------
-
-subroutine Inversa (A,AI) 
+Subroutine Inversa (A,AI) 
 
     !Element in/out
     real(8), intent(in)                     :: A(:,:)  !| !| Known dimension
@@ -147,10 +142,10 @@ subroutine Inversa (A,AI)
 
     AI=Ab(1:m,m+1:2*m) !Descartando  las matriz identidad
 
-end subroutine    
-!------------------------------------------------------------------------------------------------------------------------------------------
+End subroutine    
+!-----------------------------------------------------------------------------------------------------------
 
-subroutine Gauss(A,b,x)
+Subroutine Gauss(A,b,x)
 
     !Element in/out
     real(8), intent(in)     :: A(:,:) !|
@@ -202,11 +197,10 @@ subroutine Gauss(A,b,x)
         x(i) = h/Ab(i,i)
     enddo
 
-end subroutine
+End subroutine
+!-----------------------------------------------------------------------------------------------------------
 
-!-------------------------------------------------------------------------------------------------------------------------------------------
-
-subroutine FactorizacionLU(A,Al,Au)
+Subroutine FactorizacionLU(A,Al,Au)
 
     !Element in/out
     real(8), intent(in)                      :: A(:,:)
@@ -253,21 +247,19 @@ subroutine FactorizacionLU(A,Al,Au)
         enddo
     enddo
 
-end subroutine
-
+End subroutine
 !-----------------------------------------------------------------------------------------------------------
 
-subroutine Multiplicacion(a,b,ab)           !| Subroutine auxiliar 
+Subroutine Multiplicacion(a,b,ab)           !| Subroutine Aux 
     real(8), intent(in)         :: a,b      !| para la FactorizacionLU
     real(8), intent(out)        :: ab       !|
 
     ab=a*b
 
-end subroutine 
-
+End subroutine 
 !-----------------------------------------------------------------------------------------------------------  
 
-subroutine GaussFactorLU(A,b,X)
+Subroutine GaussFactorLU(A,b,X)
     
     Real(8), intent(in)         :: A(:,:),b(:) !| Matriz de coeficentes y vector de valores
     Real(8), intent(out)        :: X(:)
@@ -314,9 +306,10 @@ subroutine GaussFactorLU(A,b,X)
     
     enddo
 
-end subroutine
+End subroutine
 !-----------------------------------------------------------------------------------------------------------
-subroutine MiniCu(A)
+
+Subroutine MiniCu(A)
 
     !Element in/out
     Real(8), allocatable, intent(out)       :: A(:)                     !Vector de coeficientes del p(x)
@@ -360,10 +353,10 @@ subroutine MiniCu(A)
 
     call Gauss(M,B,A)
 
-end subroutine
-!-------------------------------------------------------------------------------------------------------------- 
+End subroutine
+!-----------------------------------------------------------------------------------------------------------
 
-subroutine Jacobi(A,b,Tol,x)
+Subroutine Jacobi(A,b,Tol,x)
 
     !Element in/out
     Real(8),intent(inout)   :: A(:,:),b(:),x(:)
@@ -428,31 +421,10 @@ subroutine Jacobi(A,b,Tol,x)
         
     !write(*,*)'K=',k !Para saber en que valor se ha parado el bucle
         
-end subroutine
+End subroutine
 
-!--------------------------------------------------------------------------------------------------------------
-function Norma(vector,n) !Esta subroutine hace el modulo de un vector de n dimensiones 
-
-    !Element in/out
-    real(8),intent(in)      :: Vector(:)
-    integer,intent(in)      :: n
-
-    !Variable del sistema
-    real(8)             :: Norma
-    integer             :: i
-           
-    Norma=0.d0
-
-    do i=1,n
-        Norma = Norma + Vector(i)**2
-    enddo
-                
-    Norma=sqrt(Norma)
-                
-end function
-
-!----------------------------------------------------------------------------------------------------------------
-subroutine GAUSS_SEIDEL(A,b,x,ITE) !ITE indica la iteraciones 
+!-----------------------------------------------------------------------------------------------------------
+Subroutine Gauss_Seidel(A,b,x,ITE) !ITE indica la iteraciones 
 
     !Element in/out
     real(8),intent(inout)   :: A(:,:)
@@ -514,9 +486,10 @@ subroutine GAUSS_SEIDEL(A,b,x,ITE) !ITE indica la iteraciones
         x=MATMUL(T,x)+Q
     enddo
 
-end subroutine
-!--------------------------------------------------------------------------------------------------------------------
-Subroutine Radio_espectral(A,b,tol,Autovalor) !llamamos radio espectral a el máximo valor comparándolos en valor absoluto
+End subroutine
+
+!-----------------------------------------------------------------------------------------------------------
+Subroutine Radio_espectral(A,b,tol,Autovalor) !Radio espectral es el máx[abs(autovalor)]
 
     !Element in/out
     Real(8), intent(inout)          :: A(:,:)
@@ -556,113 +529,27 @@ Subroutine Radio_espectral(A,b,tol,Autovalor) !llamamos radio espectral a el má
     
     Autovalor=suma/(norma(tv,n))**2 !Formula para obtener el autovalor
 
-end subroutine 
+End subroutine 
 
-!-------------------------------------------------------------------------------------------------------------------
+!-----------------------------------------------------------------------------------------------------------
+Function Norma(vector,n)                        !Subroutine Aux 
 
-subroutine Simpson(a,b,n,It1,F)
-
-    Interface !se utiliza para llamar a la funcion f(x), que es la que se va cambiando
-        function F(X)
-
-        real(8),intent(in):: X
-        real(8):: F
-
-        end function
-    end interface
-
-integer :: j,k
-integer, intent(in):: n !n es el numero de repeticiones de la integral
-real(8) :: h,I1,I2 !h es la distacia entre dos divisiones
-real(8), intent(in) :: a,b !a y b son respectivamente el valor inicial y el valor final de x
-real(8), intent(out) :: It1 !solucion de la integral, el area
-
-h=(b-a)/n*1.0
-I1=0 
-I2=0
-
-do j=1,n-1,2
-    I1=I1+F(a+j*h)
-end do
-
-do k=2,n-2,2
-    I2=I2+F(a+k*h)
-end do
-
-It1=(h/3)*(F(a)+4*I1+2*I2+F(b))
-
-end subroutine
-
-!----------------------------------------------------------------------------------------------------------
-
-subroutine trapecio(f,a,b,n,It2)
-
-    interface
-    function f(x)
-    real(8),intent(in)::x
-    real(8)::f
-    end function
-    end interface
+    !Element in/out
+    real(8),intent(in)      :: Vector(:)
+    integer,intent(in)      :: n
     
-    real(8),intent(inout)::a,b,n
-    real(8),intent(out)::It2
-    real(8)::x1,x2,h,A1,A2,j
+    !Variable del sistema
+    real(8)             :: Norma
+    integer             :: i
+               
+    Norma=0.d0
     
-    It2=0
+    do i=1,n
+        Norma = Norma + Vector(i)**2
+    enddo
+                    
+    Norma=sqrt(Norma)
+                    
+End function
     
-    do j=1,n
-      
-    x1=(a+((j-1)*ABS(a-b)/n))
-    x2=(a+(j*(ABS(a-b)/n)))
-    
-    h=((f(x2))-(f(x1)))
-    
-    A1=((x2-x1)*(f(x1)))
-    A2=((A1))+(((x2-x1))*((h)/(2)))
-    
-    It2=It2+A2
-    end do
-    end subroutine trapecio
-
-!------------------------------------------------------------------------------------------------------------
-
-subroutine Riemann(a,b,n,It3,F)
-
-    Interface !se utiliza para llamar a la funcion f(x), que es la que se va cambiando
-        function F(X)
-
-        real(8),intent(in):: X
-        real(8):: F
-
-        end function
-    end interface
-
-integer :: j,k !OJO, no usar i para el bucle porque I es la solucion de la integral
-integer, intent(in):: n !n es el numero de divisiones del eje x de la parte que ocupa la curva
-real(8) :: h,I1 !h es la distacia entre dos divisiones
-real(8), intent(in) :: a,b !a y b son respectivamente el valor inicial y el valor final de x
-real(8), intent(out) :: It3 !solucion de la integral, el area
-
-h=(b-a)/n*1.0
-I1=0 
-It3=0
-
-do j=1,n
-    I1=I1+F(a+j*h)
-end do
-
-It3=I1*h
-
-end subroutine
-
-!-------------------------------------------------------------------------------------------------------
-
-function f1(x) !f1 es la funcion que se va a integrar !para el ejemplo de clase el intervalo optimo de integracion es 1000
-    real(8),intent(in)::x
-    real(8)::f1
-    
-    f1=(EXP(-x**2))
-    
-end function
-    
-end module Algebra_lineal
+End module Algebra_lineal
