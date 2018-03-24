@@ -7,11 +7,14 @@ program main
     integer                         :: a,b
     Integer, parameter              :: n=10000 !Termino para determinar Ax
 
+    write(*,*) '-----------------------------------'
     Write(*,*) 'Bienvenido al cálculo de derivadas '
-    
+
+    write(*,*)
     Write(*,*) 'Intervalo que quieres'
     read(*,*) a,b 
-    
+
+    write(*,*)
     Write(*,*) 'Precision de la derivada' 
     Read(*,*) h
     
@@ -26,9 +29,9 @@ program main
         
     open(unit=10, file='Puntos.txt', status='unknown')
 
-    do i=1,n
-        write(10,*) x(i), Y(i)
-    enddo
+        do i=1,n
+            write(10,*) x(i), Y(i)
+        enddo
 
     close(10)
 
@@ -47,14 +50,6 @@ program main
         enddo
             
     close(10)
-    
-    !open(unit=10, file='derivada_centrada.txt', status='unknown') 
-    
-        !do i=1,n
-           !write(10,*) x(i), derivada_centrada(Y(i),X(i),h)
-        !enddo
-    
-    !close(10)
 
 Write(*,*) 'Realizado con exito compruebe que tiene sus documentos con los puntos'
     
