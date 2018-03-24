@@ -26,8 +26,8 @@ if((contestacion=='n').or.(Contestacion=='N')) go to 1
 !call simpson(a,b,n,It1,f1)
 !write(*,*)'el area de la integral por Simpson es:',It1
 
-call Riemann(a,b,I)
+Call Riemann(a,b,I)
 write(*,*)'el area de la integral por Riemann es:',I
 
 
-end program main
+End program main
