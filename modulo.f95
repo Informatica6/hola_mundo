@@ -551,5 +551,43 @@ Function Norma(vector,n)                        !Subroutine Aux
     Norma=sqrt(Norma)
                     
 End function
+
+subroutine mbisectriz(f,a,b,tol,xsol)
+
+interface
+    function f(x)
+        real(8)                 :: x
+        real(8)                 :: f
+    end function
     
-End module Algebra_lineal
+end interface
+
+     
+real(8),intent(inout)           :: a,b
+real(8),intent(out)             :: xsol
+real(8),intent(inout)           :: tol
+integer                         :: i
+real(8), allocatable            :: x(:),x1
+
+allocate(x(1000))
+do i=1,10000
+    !x(i+1)=((a+b)/2)
+enddo
+x(i+1)=x1
+
+
+if (f(x1)*f(a)<0) then
+    a=a
+    b=x1
+end if
+if (f(x1)*f(b)<0) then 
+    a=x1
+    b=b
+endif
+if ((abs(f(x1)))<tol) then 
+x1=xsol
+end if
+
+end subroutine
+
+end module Algebra_lineal

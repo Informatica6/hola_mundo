@@ -8,9 +8,9 @@ LD = gfortran
 FFLAGS  = -fbounds-check
 
 # COMMAND TO DELETE (Windows=del, MacOS=rm)
-RM = rm 
+RM = del 
 
-SRC  = moduloF.f95 main.f95 
+SRC  = func.f95 modulo.f95 main.f95 
 
 OBJ  = $(SRC:.f95=.o)
 EXE  = executable
