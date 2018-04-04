@@ -1,4 +1,4 @@
-program prueba
+program Practica
 
     use algebra_lineal
     
