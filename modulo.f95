@@ -20,9 +20,9 @@ contains
 Subroutine Producto(A,B,AxB,info)
 
     !Variables de entrada/salida
-    real, intent(in)        :: A(:,:)
-    real, intent(in)        :: B(:,:)
-    real, intent(out)       :: AxB(:,:)
+    real(8), intent(in)        :: A(:,:)
+    real(8), intent(in)        :: B(:,:)
+    real(8), intent(out)       :: AxB(:,:)
     integer, intent(out)    :: info     !info=  0 -> OK
                                         !info= -1 -> Error
 
@@ -47,13 +47,13 @@ End subroutine
 Subroutine Potencia(A,k,Ak)
 
     !Variables de entrada/salida
-    real, intent(in)        :: A(:,:)
-    integer, intent(in)     :: k
-    real, intent(out)       :: Ak(:,:)
+    real(8), intent(in)         :: A(:,:)
+    integer, intent(in)         :: k
+    real(8), intent(out)        :: Ak(:,:)
 
     !Variables locales
-    integer                 :: info, i, n
-    real,allocatable        :: Akplus1(:,:)
+    integer                     :: info, i, n
+    real(8),allocatable         :: Akplus1(:,:)
 
     n = size(A(1,:))
     allocate(Akplus1(n,n))
@@ -597,40 +597,30 @@ subroutine Contorno(a,b,V1,V2)
     Real(8), intent(in)         :: a,b,V1,V2  
     
     Real(8)                     :: Ax
-    integer, parameter          :: n=500
-    real(8), allocatable        :: T(:),M(:,:),D(:,:),K(:,:),b1(:),Aux(:,:)
+    integer, parameter          :: n=10
+    real(8), allocatable        :: T(:),M(:,:),D(:,:),K(:,:),b1(:)
     integer                     :: i,j
        
     Ax=(b-a)/(n-0.d0)
     
-    allocate(M(n,n),D(n,n),T(n),K(n,n),b1(n),Aux(n,n)) 
+    allocate(M(n,n),D(n,n),T(n),K(n,n),b1(n)) 
       
     !definicion de la matriz D
-        do i=1,n
-            do j=1,i-1
-                D(i,j) = -1.d0/(2.d0*Ax) 
-            enddo
+
+        D=0
+
+        do i=1,n 
+            if((i+1)/=(n+1)) D(i,i+1) = 1.d0/(2.d0*Ax)
         enddo
     
-        do i=n,1, -1
-            do j=i-1,1, -1
-                D(j,i)= 1.d0/(2.d0*Ax) 
-            enddo
+        do i=1,n 
+            if((i-1)/=0) D(i,i-1) = -1.d0/(2.d0*Ax)
         enddo
-    
-        do j=2,n 
-            D(1,j) = 1.d0/Ax
-            D(n,j-1) = -1.d0/Ax
-        enddo 
-    
-        do i=2,n-1 
-            do j=2,n-1 
-                if(i==j) D(i,j)=0
-            enddo
-        enddo
-    
-        D(1,1) = -1.d0/Ax 
+
+        D(1,1) = -1.d0/Ax
         D(n,n) = 1.d0/Ax
+        D(n,n-1) = -1.d0/Ax
+        D(1,2) = 1.d0/Ax
 
     !definicion de K(x)
 
@@ -638,21 +628,24 @@ subroutine Contorno(a,b,V1,V2)
 
         do i=1,n 
             do j=1,n 
-                if((i==j).and.(i<=n/2.d0)) K(i,j) = 16.3
-                if((i==j).and.(i>n/2.d0)) k(i,j) = 209.3
+                if((i==j).and.(i*Ax<=(b-a)/2.d0)) K(i,j) = 16.3d0
+                if((i==j).and.(i*Ax>(b-a)/2.d0)) k(i,j) = 209.3d0
             enddo
         enddo
 
     !definicion de M 
-        Aux=matmul(D,k) 
-        M=matmul(Aux,D)
+
+        M=matmul(D,k)
+        M=matmul(M,D)
+
     !Aplicamos condiciones de contorno
         M(1,:)=0
         M(n,:)=0
         M(1,1)=1
         M(n,n)=1
+
         b1=0
-        b1(1)=V1 
+        b1(1)=V1
         b1(n)=V2
 
     call GaussFactorLU(M,b1,T)
@@ -660,6 +653,8 @@ subroutine Contorno(a,b,V1,V2)
     do i=1,n 
         write(*,*) T(i)
     enddo
+
 end subroutine
 
+!-----------------------------------------------------------------------------------------------------------
 end module Algebra_lineal
