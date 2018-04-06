@@ -566,46 +566,56 @@ subroutine mbisectriz(f,a,b,tol,xsol)
      
     real(8),intent(inout)           :: a,b
     real(8),intent(out)             :: xsol
-    real(8),intent(inout)           :: tol
-    integer                         :: i
-    real(8), allocatable            :: x(:),x1
+    real(8),intent(in)              :: tol
+    integer                         :: i,ITER
+    real(8), allocatable            :: x(:)
+    
+    ITER=0
+do i=0,100000000
+    allocate(x(i+1))
 
-    allocate(x(1000))
-    do i=1,10000
-        !x(i+1)=((a+b)/2)
-    enddo
-    x(i+1)=x1
+    x(i+1)=((a+b)/2.d0)
 
-
-    if (f(x1)*f(a)<0) then
+    if ((f(x(i+1)))*f(a)<0) then
         a=a
-        b=x1
+        b=x(i+1)
     end if
-    if (f(x1)*f(b)<0) then 
-        a=x1
+
+    if (f(x(i+1))*f(b)<0) then 
+        a=x(i+1)
         b=b
     endif
-    if ((abs(f(x1)))<tol) then 
-    x1=xsol
+
+    if (abs(F(x(i+1)))<tol) then
+        write(*,*)
+        write(*,*)'La solucion es X=', X(i+1)
+        exit 
     end if
+
+    deallocate(x)
+
+    ITER=ITER+1
+enddo
+
+write(*,*) 'Numero de iteraciones usadas para hallar la solucion', ITER
 
 end subroutine
 
 !-----------------------------------------------------------------------------------------------------------
 subroutine Contorno(a,b,V1,V2)
 
-    Real(8), intent(in)         :: a,b,V1,V2  
+    Real(8), intent(in)         :: a,b,V1,V2  !a es el valor inicial, b es el valor final, V1 y v2, temperatura inicial y final
     
-    Real(8)                     :: Ax
-    integer, parameter          :: n=10
-    real(8), allocatable        :: T(:),M(:,:),D(:,:),K(:,:),b1(:)
+    Real(8)                     :: Ax ! incremento de x 
+    integer, parameter          :: n=100 ! numero de intervalos para obtener mejor precision
+    real(8), allocatable        :: T(:),M(:,:),D(:,:),K(:,:),b1(:),F(:,:)
     integer                     :: i,j
        
     Ax=(b-a)/(n-0.d0)
     
-    allocate(M(n,n),D(n,n),T(n),K(n,n),b1(n)) 
+    allocate(M(n,n),D(n,n),T(n),K(n,n),b1(n),F(n,n)) 
       
-    !definicion de la matriz D
+    !definicion de la matriz D ( matriz de derivacion)
 
         D=0
 
@@ -622,7 +632,7 @@ subroutine Contorno(a,b,V1,V2)
         D(n,n-1) = -1.d0/Ax
         D(1,2) = 1.d0/Ax
 
-    !definicion de K(x)
+    !definicion de K(x) (conductivadad termica)
 
         K=0 
 
@@ -633,12 +643,12 @@ subroutine Contorno(a,b,V1,V2)
             enddo
         enddo
 
-    !definicion de M 
+    !definicion de M=DKD
 
-        M=matmul(D,k)
-        M=matmul(M,D)
+        F=matmul(D,K)
+        M=matmul(F,D)
 
-    !Aplicamos condiciones de contorno
+    !Aplicamos condiciones de contorno (condiciones inicales)
         M(1,:)=0
         M(n,:)=0
         M(1,1)=1
@@ -648,7 +658,7 @@ subroutine Contorno(a,b,V1,V2)
         b1(1)=V1
         b1(n)=V2
 
-    call GaussFactorLU(M,b1,T)
+    call Gauss(M,b1,T)
 
     do i=1,n 
         write(*,*) T(i)

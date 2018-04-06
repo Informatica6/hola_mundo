@@ -10,7 +10,7 @@ integer:: i
 real(8):: xsol
 character           :: contestacion 
 
-1 write(*,*)'Intervalo de Integración'
+1 write(*,*)'Intervalo de Integracion'
 
 read(*,*) a,b 
 
@@ -37,5 +37,4 @@ read(*,*) tol
 !write(*,*)'el area de la integral por Riemann es:',I
 
 call mbisectriz(f,a,b,tol,xsol)
-write(*,*) "la solucion es", xsol
 End program main

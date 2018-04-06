@@ -5,7 +5,7 @@ contains
 function F(x)
 
     Real(8)        :: X
-    Real(8)                     :: F 
+    Real(8)        :: F 
 
     F = x**3+x**2-3*x-3
 
