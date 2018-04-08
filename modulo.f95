@@ -356,12 +356,12 @@ Subroutine MiniCu(A)
 End subroutine
 !-----------------------------------------------------------------------------------------------------------
 
-Subroutine Jacobi(A,b,x,tol,error)
+Subroutine Jacobi(A,b,x,tol)
 
     !Element in/out
     Real(8),intent(inout)           :: A(:,:),b(:),x(:)
     real(8),intent(in)              :: tol
-    real(8),intent(inout)           :: error
+
     !Variables internas
     integer                         :: i,j,k,m,P
     Real(8)                         :: autovalor
@@ -416,14 +416,6 @@ Subroutine Jacobi(A,b,x,tol,error)
         
     C=matmul(ID,b)
     T=matmul(-ID,(U+L))
-
-    !condicion de convergencia 
-    call Radio_espectral(T,tol,autovalor)
-
-    if(autovalor>1) then 
-        error=1
-        stop
-    endif
     
     do k=1,1000000
         x=matmul(T,x)+c
@@ -694,7 +686,7 @@ subroutine Contorno(a,b,V1,V2)
     
     Real(8)                     :: Ax ! incremento de x 
     real(8), parameter          :: tol=0.00001 !Precision para el programa del radio espectral y Jacobi
-    Real(8)                     :: Autovalor, error,A100,A500,A1000,A2000,A3000
+    Real(8)                     :: Autovalor
     real(8), allocatable        :: T(:),M(:,:),D(:,:),K(:,:),b1(:),F(:,:),X(:),baus(:), Y(:)
     integer                     :: i,j,n,count,suma,suma1,countlu !n= numero de divisiones de la barra
 
@@ -769,7 +761,7 @@ subroutine Contorno(a,b,V1,V2)
         endif
 
         if(suma>suma1) then 
-            Call Jacobi(M,b1,T,tol,error)
+            Call Jacobi(M,b1,T,tol)
             write(*,*) 'Se ha utilizado el metodo de Jacobi'
         else
             call Gauss(M,b1,T) 
@@ -786,104 +778,6 @@ subroutine Contorno(a,b,V1,V2)
         enddo
 
     close(10)
-!-------------------Calculo del error------------------
-A100=0
-A500=0
-A1000=0
-A2000=0
-A3000=0
-allocate(baus(100),Y(100))
-
-Ax=(b-a)/100
-
-    open(unit=10,file='puntos100.txt', status='old')
-            do i=1,100 
-                read(10,*) baus(i), Y(i)
-            enddo 
-    close(10)
-
-do i=1,100
-    A100=a100+Ax*Y(i)
-enddo
-deallocate(baus,Y)
-!-------------------------------------------
-allocate(baus(500),Y(500))
-
-Ax=(b-a)/500
-
-    open(unit=10,file='puntos500.txt', status='old')
-            do i=1,500 
-                read(10,*) baus(i), Y(i)
-            enddo 
-    close(10)
-
-do i=1,500
-    A500=a500+Ax*Y(i)
-enddo
-deallocate(baus,Y)
-!------------------------------------------------
-allocate(baus(1000),Y(1000))
-
-    Ax=(b-a)/1000
-    
-        open(unit=10,file='puntos1000.txt', status='old')
-                do i=1,1000 
-                    read(10,*) baus(i), Y(i)
-                enddo 
-        close(10)
-    
-    do i=1,1000
-        A1000=a1000+Ax*Y(i)
-    enddo
-        deallocate(baus,Y)    
-!--------------------------------------------
-        allocate(baus(2000),Y(2000))
-
-        Ax=(b-a)/2000
-        
-            open(unit=10,file='puntos2000.txt', status='old')
-                    do i=1,2000 
-                        read(10,*) baus(i), Y(i)
-                    enddo 
-            close(10)
-        
-        do i=1,2000
-            A2000=a2000+Ax*Y(i)
-        enddo   
-            deallocate(baus,Y) 
-!--------------------------------------------
-            allocate(baus(3000),Y(3000))
-
-            Ax=(b-a)/3000
-            
-                open(unit=10,file='puntos3000.txt', status='old')
-                        do i=1,3000 
-                            read(10,*) baus(i), Y(i)
-                        enddo 
-                close(10)
-            
-            do i=1,3000
-                A3000=a3000+Ax*Y(i)
-            enddo
-                deallocate(baus,Y)
-!--------------------------------------------    
-        allocate(baus(4),Y(4)) 
-
-        baus(1)= 100
-        baus(2)= 500
-        baus(3)= 1000
-        baus(4)= 2000
-
-        Y(1)=abs(a3000-a100)
-        Y(2)=abs(a3000-a500)
-        Y(3)=abs(a3000-a1000)
-        Y(4)=abs(a3000-a2000)
-
-        open(unit=10, file='error.txt', status='unknown')
-        do i=1,4
-                write(10,*) baus(i), Y(i)
-        enddo
-            close(10)
 
 end subroutine
 
