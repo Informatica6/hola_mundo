@@ -1,5 +1,5 @@
 program Practica
-    use funciones 
+    
     use algebra_lineal
     
     real(8)         :: a,b,V1,V2,tol
