@@ -1,6 +1,6 @@
 program main
 
-    use Derivadas
+    use Funciones
     
     real(8), allocatable            :: Y(:),X(:)
     Real(8)                         :: h,Ax

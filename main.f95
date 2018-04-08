@@ -1,7 +1,6 @@
 program main
-use func
+use funciones
 use algebra_lineal 
-!use Integracion
 
 !real(8)             :: a,b,It1,It2,I !para la integral por trapecios n se define como real y para la de simpson y Riemann como entero
 !integer            :: n

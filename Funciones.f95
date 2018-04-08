@@ -1,16 +1,18 @@
-module Derivadas 
+module funciones 
 
-contains 
+implicit none
 
-function F(x)
+contains
 
-    Real(8),intent(in)          :: X
-    Real(8)                     :: F 
+Function F(x)
 
-    F = x**2
+    Real(8)        :: X
+    Real(8)        :: F 
 
-end function 
+    F = x**3+x**2-3*x-3
 
+End function 
+!------------------------------------------------------------------    
 function derivada_progresiva(Y,x,h)
 
     Real(8),intent(in)              :: Y,X,h
@@ -21,6 +23,7 @@ function derivada_progresiva(Y,x,h)
 
 end function 
 
+!-------------------------------------------------------------------
 function derivada_regresiva(Y,x,h)
 
     Real(8),intent(in)              :: Y,X,h
@@ -31,6 +34,7 @@ function derivada_regresiva(Y,x,h)
 
 end function
 
+!--------------------------------------------------------------------
 function derivada_centrada(Y,x,h)
 
     Real(8),intent(in)              :: Y,X,h
@@ -41,6 +45,7 @@ function derivada_centrada(Y,x,h)
 
 end function
 
+!--------------------------------------------------------------------
 function derivada_progresiva_2(Y,x,h)
 
     Real(8),intent(in)              :: Y,X,h
@@ -51,6 +56,7 @@ function derivada_progresiva_2(Y,x,h)
     
 end function
 
+!--------------------------------------------------------------------
 function derivada_regresiva_2(Y,x,h)
 
     Real(8),intent(in)              :: Y,X,h
@@ -61,6 +67,7 @@ function derivada_regresiva_2(Y,x,h)
     
 end function
 
+!--------------------------------------------------------------------
 function derivada_centrada_2(Y,x,h)
 
     Real(8),intent(in)              :: Y,X,h
@@ -69,8 +76,9 @@ function derivada_centrada_2(Y,x,h)
     
     derivada_centrada_2 = (F(x+h)-2*Y+F(x-h))/h**2
     
-end function    
+end function 
 
+!--------------------------------------------------------------------
 function Norma(vector) 
 
     !Element in/out
@@ -89,5 +97,6 @@ function Norma(vector)
     Norma=sqrt(Norma)
                     
 end function
-        
+
+!--------------------------------------------------------------------
 end module

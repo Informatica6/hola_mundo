@@ -359,32 +359,33 @@ End subroutine
 Subroutine Jacobi(A,b,x,tol)
 
     !Element in/out
-    Real(8),intent(inout)   :: A(:,:),b(:),x(:)
-    real(8),intent(in)      :: Tol
-    
+    Real(8),intent(inout)           :: A(:,:),b(:),x(:)
+    real(8),intent(in)              :: tol
     !Variables internas
-    integer                 :: i,j,m,P,k
-    real(8), allocatable    :: Ab(:,:),PIV(:),V(:),L(:,:),D(:,:),ID(:,:),U(:,:),Q(:),T(:,:),Xant(:)
+    integer                         :: i,j,k,m,P
+    Real(8)                         :: autovalor
+    real(8), allocatable            :: Ab(:,:),PIV(:),V(:),L(:,:),D(:,:),ID(:,:),U(:,:),C(:),T(:,:),Xant(:)
         
     m = size(A,1)
-    allocate(Ab(m,m+1),PIV(m-1),V(m+1),L(m,m),D(m,m),ID(m,m),U(m,m),Q(m),Xant(m),T(m,m))
+    allocate(Ab(m,m+1),PIV(m-1),V(m+1),L(m,m),D(m,m),ID(m,m),U(m,m),C(m),Xant(m),T(m,m))
         
     Ab(1:m,1:m) = A !| (A|b) matriz
     Ab(1:m,m+1) = b !|
-        
+    
+    !Sistema de pivotacion 
     do i=1,m-1  
         if (abs(Ab(i,i))<epsilon(1.d0)) then
-        P=0
-        PIV=0
+            P=0
+            PIV=0
 
             do j=1,m-i
                 PIV(j)=abs(Ab(i+j,i))
             enddo 
 
-        P=maxloc(PIV,1)
-        V(:)=Ab(i,:)
-        Ab(i,:)=Ab(i+P,:)
-        Ab(i+P,:)=V(:)
+            P=maxloc(PIV,1)
+            V(:)=Ab(i,:)
+            Ab(i,:)=Ab(i+P,:)
+            Ab(i+P,:)=V(:)
         endif
     enddo
         
@@ -395,31 +396,37 @@ Subroutine Jacobi(A,b,x,tol)
     U=0.d0
     D=0.d0
         
+    !Aislando la diagonal de la matriz A
     do i=1,m
         D(i,i)=A(i,i)
     enddo
         
-        
+    !Aislado el triangulo superior de matriz A
     do i=1,m-1
         do j=1,m-i
             U(i,i+j)=A(i,i+j)
         enddo
     enddo
-        
+
+    !Aislando el triangulo inferior de la matriz A 
     L=A-U-D
         
     call Inversa(D,ID)
         
-    Q=MATMUL(ID,b)
-    T=MATMUL(-ID,(U+L))
-        
-    do k=1,1000000
-        x=MATMUL(T,x)+Q
-            if(((Norma(x-xant,m))/Norma(x,m))<=TOL)EXIT
-        Xant=x
-    enddo
-        
-    !write(*,*)'K=',k !Para saber en que valor se ha parado el bucle
+    C=matmul(ID,b)
+    T=matmul(-ID,(U+L))
+
+    call Radio_espectral(T,tol,autovalor)
+
+    if(autovalor<1) then !Condicion de convergencia el p(A)<1 
+        do k=1,1000000
+            x=matmul(T,x)+c
+                if(((Norma(x-xant))/Norma(x))<=TOL) exit
+            Xant=x
+        enddo
+    end if
+
+    write(*,*) autovalor
         
 End subroutine
 
@@ -489,31 +496,33 @@ Subroutine Gauss_Seidel(A,b,x,ITE) !ITE indica la iteraciones
 End subroutine
 
 !-----------------------------------------------------------------------------------------------------------
-Subroutine Radio_espectral(A,b,tol,Autovalor) !Radio espectral es el máx[abs(autovalor)]
+Subroutine Radio_espectral(A,tol,Autovalor) !Radio espectral es el máx[abs(autovalor)]
 
     !Element in/out
     Real(8), intent(inout)          :: A(:,:)
-    Real(8), intent(in)             :: b(:),tol 
+    Real(8), intent(in)             :: tol
     Real(8), intent(out)            :: autovalor
 
-    !local variable 
-    Real(8), allocatable            :: TV(:),Temp(:),Baux(:) !Vectores auxiliares
+    !local variable
+    Real(8), allocatable            :: TV(:),Temp(:),Baux(:),b(:) !Vectores auxiliares
     real(8)                         :: t,suma
     Integer                         :: i
     integer                         :: n !Dimesion de la matriz
 
     n=size(A(1,:))
+    
+    Allocate(TV(n),Temp(n),Baux(n),b(n))
 
-    Allocate(TV(n),Temp(n),Baux(n))
+    b=1 !Definimos con cualquier numero
 
     TV=matmul(A,b)
-    TV=(1/norma(tv,n))*tv !La primera vez con el vector de inicio que nos piden
+    TV=(1/norma(tv))*tv !La primera vez con el vector de inicio que nos piden
 
     do i=1,100
         Temp=Tv             !| Proceso para
         Tv=0                !| converger
         Tv=matmul(A,temp)   !| en el
-        Tv=Tv/norma(tv,n)   !| autovector
+        Tv=Tv/norma(tv)   !| autovector
 
        !if(abs(Temp(1)-tv(1))<tol) exit no se como hacer esto
     enddo
@@ -527,43 +536,116 @@ Subroutine Radio_espectral(A,b,tol,Autovalor) !Radio espectral es el máx[abs(au
         suma=suma+T
     enddo
     
-    Autovalor=suma/(norma(tv,n))**2 !Formula para obtener el autovalor
+    Autovalor=abs(suma/(norma(tv))**2) !Formula para obtener el autovalor
+
 
 End subroutine 
 
 !-----------------------------------------------------------------------------------------------------------
-Function Norma(vector,n)                        !Subroutine Aux 
+subroutine Riemann(f,a,b,I)
 
-    !Element in/out
-    real(8),intent(in)      :: Vector(:)
-    integer,intent(in)      :: n
+    interface
+        function f(x)
+            real(8),intent(in)      :: x
+            real(8)                 :: f
+        end function
+    end interface
+
+    Real(8), intent(in)         :: a,b  
+    Real(8), intent(out)        :: I    
     
-    !Variable del sistema
-    real(8)             :: Norma
-    integer             :: i
-               
-    Norma=0.d0
-    
-    do i=1,n
-        Norma = Norma + Vector(i)**2
+    Real(8)                     :: Ax
+    Real(8), allocatable        :: X(:),Y(:) 
+    Integer                     :: j,k
+    integer,parameter           :: n=1000000
+
+    Allocate(X(n+1),Y(n+1)) 
+
+    Ax= (b-a)/(n-0.d0) 
+
+    do j=1,n+1
+        X(j)=a+(j-1)*Ax
+        Y(j) = F(X(j)-0.d0) 
+        I=I+Ax*Y(j)
     enddo
-                    
-    Norma=sqrt(Norma)
-                    
-End function
+
+end subroutine 
+
+!-----------------------------------------------------------------------------------------------------------
+subroutine Trapecio(f,a,b,n,It2)
+
+    interface
+        function f(x)
+            real(8)                 :: x,f
+        end function
+    end interface
+        
+    real(8),intent(inout)           ::a,b
+    real(8),intent(out)             ::It2
+    real(8)                         ::x1,x2,h,A1,A2
+    integer                         :: n,j
+        
+    It2=0
+        
+    do j=1,n
+          
+        x1=(a+((j-1)*ABS(a-b)/n))
+        x2=(a+(j*(ABS(a-b)/n)))
+        
+        h=((f(x2))-(f(x1)))
+        
+        A1=((x2-x1)*(f(x1)))
+        A2=((A1))+(((x2-x1))*((h)/(2)))
+        
+        It2=It2+A2
+    end do
+end subroutine
+
+!-----------------------------------------------------------------------------------------------------------   
+subroutine Simpson(f,a,b,n,It1)
+
+    Interface !se utiliza para llamar a la funcion f(x), que es la que se va cambiando
+        function F(X)
+
+        real(8),intent(in)          :: X
+        real(8)                     :: F
+
+        end function
+    end interface
+
+    integer                         :: j,k
+    integer, intent(in)             :: n !n es el numero de repeticiones de la integral
+    real(8)                         :: h,I1,I2 !h es la distacia entre dos divisiones
+    real(8), intent(in)             :: a,b !a y b son respectivamente el valor inicial y el valor final de x
+    real(8), intent(out)            :: It1 !solucion de la integral, el area
+
+    h=(b-a)/n*1.0
+    I1=0 
+    I2=0
+
+    do j=1,n-1,2
+        I1=I1+F(a+j*h)
+    end do
+
+    do k=2,n-2,2
+        I2=I2+F(a+k*h)
+    end do
+
+    It1=(h/3)*(F(a)+4*I1+2*I2+F(b))
+
+end subroutine
 
 !-----------------------------------------------------------------------------------------------------------
 subroutine mbisectriz(f,a,b,tol,xsol)
 
     interface
+    
         function f(x)
-            real(8)                 :: x
-            real(8)                 :: f
+            real(8)                 :: x,f
         end function
     
     end interface
 
-     
     real(8),intent(inout)           :: a,b
     real(8),intent(out)             :: xsol
     real(8),intent(in)              :: tol
@@ -571,33 +653,34 @@ subroutine mbisectriz(f,a,b,tol,xsol)
     real(8), allocatable            :: x(:)
     
     ITER=0
-do i=0,100000000
-    allocate(x(i+1))
 
-    x(i+1)=((a+b)/2.d0)
+    do i=0,100000000
+        allocate(x(i+1))
 
-    if ((f(x(i+1)))*f(a)<0) then
-        a=a
-        b=x(i+1)
-    end if
+        x(i+1)=((a+b)/2.d0)
 
-    if (f(x(i+1))*f(b)<0) then 
-        a=x(i+1)
-        b=b
-    endif
+        if ((f(x(i+1)))*f(a)<0) then
+            a=a
+            b=x(i+1)
+        end if
 
-    if (abs(F(x(i+1)))<tol) then
-        write(*,*)
-        write(*,*)'La solucion es X=', X(i+1)
-        exit 
-    end if
+        if (f(x(i+1))*f(b)<0) then 
+            a=x(i+1)
+            b=b
+        endif
 
-    deallocate(x)
+        if (abs(F(x(i+1)))<tol) then
+            write(*,*)
+            write(*,*)'La solucion es X=', X(i+1)
+            exit 
+        end if
 
-    ITER=ITER+1
-enddo
+        deallocate(x)
 
-write(*,*) 'Numero de iteraciones usadas para hallar la solucion', ITER
+        ITER=ITER+1
+    enddo
+
+    write(*,*) 'Numero de iteraciones usadas para hallar la solucion', ITER
 
 end subroutine
 
@@ -607,13 +690,17 @@ subroutine Contorno(a,b,V1,V2)
     Real(8), intent(in)         :: a,b,V1,V2  !a es el valor inicial, b es el valor final, V1 y v2, temperatura inicial y final
     
     Real(8)                     :: Ax ! incremento de x 
-    integer, parameter          :: n=100 ! numero de intervalos para obtener mejor precision
-    real(8), allocatable        :: T(:),M(:,:),D(:,:),K(:,:),b1(:),F(:,:)
-    integer                     :: i,j
+    real(8), parameter          :: tol=0.001 !Precision para el programa del radio espectral 
+    Real(8)                     :: Autovalor, norma_M
+    real(8), allocatable        :: T(:),M(:,:),D(:,:),K(:,:),b1(:),F(:,:),X(:)
+    integer                     :: i,j,n,count !n= numero de divisiones de la barra
        
+    write(*,*) 'Indique el numero de subdivisiones de la barra que desea realizar'
+    read(*,*) n 
+
     Ax=(b-a)/(n-0.d0)
     
-    allocate(M(n,n),D(n,n),T(n),K(n,n),b1(n),F(n,n)) 
+    allocate(M(n,n),D(n,n),T(n),K(n,n),b1(n),F(n,n),X(n)) 
       
     !definicion de la matriz D ( matriz de derivacion)
 
@@ -658,12 +745,63 @@ subroutine Contorno(a,b,V1,V2)
         b1(1)=V1
         b1(n)=V2
 
-    call Gauss(M,b1,T)
 
-    do i=1,n 
-        write(*,*) T(i)
+
+
+    !Norma de una matriz
+        call Norma_Matriz(M,norma_M)
+
+    call jacobi(M,b1,T,tol)
+    !call GaussFactorLU(M,b1,T)
+
+    open(unit=10, file='Puntos.txt',status='unknown')
+
+        X(n)=b
+
+        do i=1,n
+            X(i)= a+(i-1)*Ax 
+            write(10,*) X(i), T(i)
+        enddo
+
+    close(10)
+
+end subroutine
+
+!-----------------------------------------------------------------------------------------------------------
+function Norma(vector) 
+
+    !Element in/out
+    real(8),intent(in)      :: Vector(:)
+    
+    !Variable del sistema
+    real(8)             :: Norma
+    integer             :: i
+               
+    Norma=0.d0
+    
+    do i=1,size(vector)
+        Norma = Norma + Vector(i)**2
     enddo
+                    
+    Norma=sqrt(Norma)
+                    
+end function
+ 
+!------------------------------------------------------------------------------------------------------------   
+subroutine Norma_Matriz(M,norma_M)
+    real(8), intent(in)             :: M(:,:)
+    real(8), intent(out)            :: Norma_M
 
+    integer                         :: i,j,n
+
+    n= size(M(1,:))
+    do i=1,n
+        do j=1,n 
+            Norma_M=Norma_m+(M(i,j)**2)
+        enddo
+    enddo
+    
+    Norma_m=sqrt(Norma_M)
 end subroutine
 
 !-----------------------------------------------------------------------------------------------------------
