@@ -3,9 +3,13 @@ import numpy as np #utilizacion de numpy y su abreviacion
 
 #leemos los valores desde un archivo .txt
 
-data= np.genfromtxt('puntos3000.txt') 
+data= np.genfromtxt('puntos.txt') 
 x = data[:,0]
 y = data[:,1]
+
+data1= np.genfromtxt('puntos3000.txt') 
+x1 = data[:,0]
+y1 = data[:,1]
 
 data2= np.genfromtxt('puntos100.txt') 
 x2 = data2[:,0]
@@ -30,7 +34,7 @@ ax.set_xlabel('Distancia')
 
 #Generamos las gráficas
 
-plt.plot(x,y,'k',)
+plt.plot(x1,y1,'k',)
 plt.plot(x2,y2,'cyan',)
 plt.plot(x3,y3,'yellow',)
 plt.plot(x4,y4,'g',)
@@ -44,6 +48,24 @@ error= np.genfromtxt('error.txt')
 xe = error[:,0]
 ye = error[:,1]
 
+fig, ax = plt.subplots()
+ax.set_ylabel('Error')
+ax.set_title('Error en funcion de la N')
+ax.set_xlabel('N')
+
 plt.plot(xe,ye,'k',)
+
+plt.show()
+
+data= np.genfromtxt('puntos.txt') 
+x = data[:,0]
+y = data[:,1]
+
+fig, ax = plt.subplots()
+ax.set_ylabel('Temperatura')
+ax.set_title('Temperatura en funcion de la distancia')
+ax.set_xlabel('Distancia')
+
+plt.plot(x,y,'k',)
 
 plt.show()
