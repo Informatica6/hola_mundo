@@ -230,9 +230,11 @@ allocate(baus(10),Y(10))
   Y(10)=abs(a3000-a2250)
 
 open(unit=10, file='error.txt', status='unknown')
+    write(10,*) size(Y)
   do i=1,10
     write(10,*) baus(i), Y(i)
   enddo
 close(10)  
 
+call MiniCu(Y)
 end program 

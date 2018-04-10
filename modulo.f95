@@ -322,7 +322,7 @@ Subroutine MiniCu(A)
     write(*,*) 'Numero de elementos que quieres el primero empieza en x^0'
     read(*,*) p !Grado del polinomio
 
-    open(unit=1, file='data_file.dat', status='old')
+    open(unit=1, file='error.txt', status='old')
     read(1,*) n !Determinando el numero de puntos 
 
     allocate(M(p,p),B(p),A(p),Dato(n,2)) 
@@ -352,6 +352,14 @@ Subroutine MiniCu(A)
     enddo
 
     call Gauss(M,B,A)
+
+    open(unit=10, file='coeficentes.txt', status='unknown')
+
+        do i=1,size(A)
+            write(10,*) A(i)
+        enddo
+
+    close(10)
 
 End subroutine
 !-----------------------------------------------------------------------------------------------------------
