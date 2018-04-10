@@ -237,4 +237,5 @@ open(unit=10, file='error.txt', status='unknown')
 close(10)  
 
 call MiniCu(Y)
+
 end program 
