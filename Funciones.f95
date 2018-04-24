@@ -1,4 +1,4 @@
-module funciones 
+module Funciones 
 
 implicit none
 
@@ -9,7 +9,7 @@ Function F(x)
     Real(8)        :: X
     Real(8)        :: F 
 
-    F = x**3+x**2-3*x-3
+    F = x**2-5
 
 End function 
 !------------------------------------------------------------------    
@@ -35,11 +35,13 @@ function derivada_regresiva(Y,x,h)
 end function
 
 !--------------------------------------------------------------------
-function derivada_centrada(Y,x,h)
+function derivada_centrada(x)
 
-    Real(8),intent(in)              :: Y,X,h
+    Real(8),intent(in)              :: x
 
-    Real(8)                         :: derivada_centrada
+    Real(8)                         :: derivada_centrada,h
+
+    h=0.00001
 
     derivada_centrada = (F(x+h)-F(x-h))/h
 
@@ -97,6 +99,5 @@ function Norma(vector)
     Norma=sqrt(Norma)
                     
 end function
-
 !--------------------------------------------------------------------
 end module

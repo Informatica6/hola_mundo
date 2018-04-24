@@ -356,7 +356,19 @@ Subroutine MiniCu(A)
 End subroutine
 !-----------------------------------------------------------------------------------------------------------
 
-Subroutine Jacobi(A,b,x,tol)
+Subroutine Jacobi(A,b,x,tol,norma)
+
+    interface
+        function Norma(vector) 
+
+        !Element in/out
+        real(8)                 :: Vector(:)
+    
+        !Variable del sistema
+        real(8)                 :: Norma
+                    
+        end function
+    end interface
 
     !Element in/out
     Real(8),intent(inout)           :: A(:,:),b(:),x(:)
@@ -491,7 +503,19 @@ Subroutine Gauss_Seidel(A,b,x,ITE) !ITE indica la iteraciones
 End subroutine
 
 !-----------------------------------------------------------------------------------------------------------
-Subroutine Radio_espectral(A,tol,Autovalor) !Radio espectral es el máx[abs(autovalor)]
+Subroutine Radio_espectral(A,tol,Autovalor,norma) !Radio espectral es el máx[abs(autovalor)]
+
+    interface
+        function Norma(vector) 
+
+        !Element in/out
+        real(8),intent(in)      :: Vector(:)
+
+        !Variable del sistema
+        real(8)             :: Norma
+            
+        end function
+    end interface 
 
     !Element in/out
     Real(8), intent(inout)          :: A(:,:)
@@ -680,7 +704,19 @@ subroutine mbisectriz(f,a,b,tol,xsol)
 end subroutine
 
 !-----------------------------------------------------------------------------------------------------------
-subroutine Contorno(a,b,V1,V2)
+subroutine Contorno(a,b,V1,V2,norma)
+
+    interface
+        function Norma(vector) 
+
+        !Element in/out
+        real(8)                 :: Vector(:)
+
+        !Variable del sistema
+        real(8)                 :: Norma
+                
+        end function
+    end interface
 
     Real(8), intent(in)         :: a,b,V1,V2  !a es el valor inicial, b es el valor final, V1 y v2, temperatura inicial y final
     
@@ -761,7 +797,7 @@ subroutine Contorno(a,b,V1,V2)
         endif
 
         if(suma>suma1) then 
-            Call Jacobi(M,b1,T,tol)
+            Call Jacobi(M,b1,T,tol,norma)
             write(*,*) 'Se ha utilizado el metodo de Jacobi'
         else
             call Gauss(M,b1,T) 
@@ -781,26 +817,91 @@ subroutine Contorno(a,b,V1,V2)
 
 end subroutine
 
-!-----------------------------------------------------------------------------------------------------------
-function Norma(vector) 
+!------------------------------------------------------------------------------------------------------------
+subroutine Newton_Raphson(x,tol,f,derivada_centrada) 
 
+    Interface
+
+        function F(x)
+            real(8)             :: x
+            real(8)             :: F
+        end function
+
+        function derivada_centrada(x)
+            real(8)             ::  derivada_centrada,x
+        end function
+    
+    end interface
+    
     !Element in/out
-    real(8),intent(in)      :: Vector(:)
-    
-    !Variable del sistema
-    real(8)             :: Norma
-    integer             :: i
-               
-    Norma=0.d0
-    
-    do i=1,size(vector)
-        Norma = Norma + Vector(i)**2
-    enddo
-                    
-    Norma=sqrt(Norma)
-                    
-end function
- 
-!------------------------------------------------------------------------------------------------------------   
+    real(8),intent(inout)       :: x
+    real(8),intent(in)          :: tol 
 
+    !Local variable
+    real(8)                     :: x0
+    Integer, parameter          :: N=100000
+    integer                     :: i
+
+    write(*,*) 'Valor inicial'
+    read(*,*) X0
+    
+    do i = 1, N 
+        
+        x=x0-(f(x0)/(derivada_centrada(x0)))
+
+        if((abs(f(x))<tol)) exit
+
+        x0=x
+
+    enddo
+
+    write(*,*) X
+                        
+end subroutine
+
+!------------------------------------------------------------------------------------------------------------   
+subroutine Fractal(X,tol,N) 
+
+    interface
+        function Norma(vector) 
+
+        !Element in/out
+        real(8)                 :: Vector(:)
+    
+        !Variable del sistema
+        real(8)                 :: Norma
+                    
+        end function
+    end interface
+
+    real(8),intent(out)                 :: x(:)
+    real(8), intent(in)                 :: tol
+    integer, intent(in)                 :: N
+
+    real(8),allocatable                 :: J(:,:),b(:),Y(:),xant(:)
+    integer                             :: i
+
+    do i = 1, N 
+
+    allocate(J(n,n),b(n),xant(n),Y(n))
+
+    J(1,1) = 3*xant(1)**2-3*xant(2)**2
+    J(1,2) = -6*xant(1)*xant(2) 
+    J(2,1) = 6*xant(1)*xant(2)
+    J(2,2) = 3*xant(1)**2-3*xant(2)**2
+
+    b(1) = xant(1)**3-3*xant(1)*xant(2)**2-(1.d0/6.d0)
+    b(2) = 3*xant(1)**2*xant(1)-xant(2)**3
+ 
+    call Gauss(J,b,y)
+
+    x = xant-y
+        
+    if(Norma(x-xant)<tol) write(*,*) X
+
+    enddo
+
+end subroutine 
+
+!------------------------------------------------------------------------------------------------------------- 
 end module Algebra_lineal

@@ -1,26 +1,30 @@
 program main
-use funciones
+
 use algebra_lineal 
+use funciones
 
 !real(8)             :: a,b,It1,It2,I !para la integral por trapecios n se define como real y para la de simpson y Riemann como entero
 !integer            :: n
-real(8):: a,b,tol
-integer:: i
-real(8):: xsol
-character           :: contestacion 
+!real(8):: a,b,tol
+!integer:: i
+!real(8):: xsol
+!character           :: contestacion 
+real(8)             :: derivada_centrada,x,tol
 
-1 write(*,*)'Intervalo de Integracion'
+tol=0.0000001
 
-read(*,*) a,b 
+!1 write(*,*)'Intervalo de Integracion'
 
-write(*,*)'¿El intervalo es correcto?',a,b 
-write(*,*) 'Y/N'
-read(*,*) contestacion 
+!read(*,*) a,b 
 
-if((contestacion=='n').or.(Contestacion=='N')) go to 1 
+!write(*,*)'¿El intervalo es correcto?',a,b 
+!write(*,*) 'Y/N'
+!read(*,*) contestacion 
 
-write(*,*) "Escribe la tolerancia"
-read(*,*) tol 
+!if((contestacion=='n').or.(Contestacion=='N')) go to 1 
+
+!write(*,*) "Escribe la tolerancia"
+!read(*,*) tol 
 
 !write(*,*)'elige un numero de subintervalos' 
 
@@ -35,5 +39,13 @@ read(*,*) tol
 !Call Riemann(a,b,I)
 !write(*,*)'el area de la integral por Riemann es:',I
 
-call mbisectriz(f,a,b,tol,xsol)
+!call mbisectriz(f,a,b,tol,xsol)
+
+!Newton-rapshon !se obtiene la raiz de la funcion mediante iteracciones ( a partir de un x0 inicial).
+
+!para ello se calcula la recta tg y luego la interseccion de esta con el eje, aproximandose cada vez mas a la raiz.
+
+call newton_Raphson(x,tol,f,derivada_centrada)
+
+
 End program main
