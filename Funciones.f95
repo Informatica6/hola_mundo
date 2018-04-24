@@ -9,19 +9,10 @@ Function F(x)
     Real(8)        :: X
     Real(8)        :: F 
 
-    F = x**3-1
+    F = x**3+x**2-3*x-3
 
 End function 
 !------------------------------------------------------------------    
-
-Function df(x)
-    real(8)        :: X
-    real(8)        :: df
-
-    df = 3*(x**2)
-end function
-!-------------------------------------------------------------
-
 function derivada_progresiva(Y,x,h)
 
     Real(8),intent(in)              :: Y,X,h
