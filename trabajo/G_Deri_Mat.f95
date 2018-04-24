@@ -1,0 +1,57 @@
+program main
+
+    use Funciones
+    
+    real(8), allocatable            :: Y(:),X(:)
+    Real(8)                         :: h,Ax
+    integer                         :: a,b
+    Integer, parameter              :: n=10000 !Termino para determinar Ax
+
+    write(*,*) '-----------------------------------'
+    Write(*,*) 'Bienvenido al cálculo de derivadas '
+
+    write(*,*)
+    Write(*,*) 'Intervalo que quieres'
+    read(*,*) a,b 
+
+    write(*,*)
+    Write(*,*) 'Precision de la derivada' 
+    Read(*,*) h
+    
+    Ax= (b-a)/(n-0.d0) !Distancia entre x(i) y x(i+1)
+
+    allocate(Y(n),X(n))
+    
+    do i=1,n
+        X(i)=a+i*Ax
+        Y(i) = F(X(i)-0.d0) 
+    enddo
+        
+    open(unit=10, file='Puntos.txt', status='unknown')
+
+        do i=1,n
+            write(10,*) x(i), Y(i)
+        enddo
+
+    close(10)
+
+    open(unit=10, file='derivada_centrada.txt', status='unknown') 
+    
+        do i=1,n
+            write(10,*) x(i), derivada_centrada(Y(i),X(i),h)
+        enddo
+            
+    close(10)
+    
+    open(unit=10, file='derivada_centrada_2.txt', status='unknown') 
+    
+        do i=1,n
+            write(10,*) x(i), derivada_centrada_2(Y(i),X(i),h)
+        enddo
+            
+    close(10)
+
+Write(*,*) 'Realizado con exito compruebe que tiene sus documentos con los puntos'
+    
+end program main
+    
