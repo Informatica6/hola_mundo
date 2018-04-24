@@ -2,32 +2,48 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-data= np.genfromtxt('error.txt', skip_header = 1)
+data= np.genfromtxt('puntos.txt', skip_header = 1)
 
-x_prueba = data[:,0]
-y_prueba = data[:,1]
+x = data[:,0]
+y = data[:,1]
 
-plt.plot(x_prueba,y_prueba, 'k+')
+plt.plot(x,y, 'k+')
 
-coef_1 = np.genfromtxt('coeficentes.txt')
-coef_2 = np.genfromtxt('coeficentes.txt')
-coef_3 = np.genfromtxt('coeficentes.txt')
-coef_10 = np.genfromtxt('coeficentes.txt')
+data1= np.genfromtxt('potencial1.txt', skip_header = 1)
 
-coefs = [coef_1, coef_2, coef_3, coef_10]
+x_1 = data1[:,0]
+y_1 = data1[:,1]
 
-colores = ['b', 'g', 'r', 'm']
+plt.plot(x_1,y_1, 'b')
 
-for i in range(4):
-    l = len(coefs[i])
+data2= np.genfromtxt('potencial2.txt', skip_header = 1)
 
-    for j in range(int(l/2)):
-        temp = coefs[i][j]
-        coefs[i][j] = coefs[i][l-1-j]
-        coefs[i][l-1-j] = temp
+x_2 = data2[:,0]
+y_2 = data2[:,1]
 
-    f = np.poly1d(coefs[i])
-    y_new = f(x_prueba)
-    plt.plot(x_prueba, y_new, color = colores[i])
+plt.plot(x_2,y_2, 'b')
+
+data3= np.genfromtxt('potencial3.txt', skip_header = 1)
+
+x_3 = data3[:,0]
+y_3 = data3[:,1]
+
+plt.plot(x_3,y_3, 'b')
+
+data4= np.genfromtxt('potencial4.txt', skip_header = 1)
+
+x_4 = data4[:,0]
+y_4 = data4[:,1]
+
+plt.plot(x_4,y_4, 'b')
+
+data5= np.genfromtxt('potencial5.txt', skip_header = 1)
+
+x_5 = data5[:,0]
+y_5 = data5[:,1]
+
+plt.plot(x_5,y_5, 'b')
+
+plt.axis([1, 15, 0, 11])
 
 plt.show()
