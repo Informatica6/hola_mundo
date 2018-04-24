@@ -364,7 +364,19 @@ Subroutine MiniCu(A)
 End subroutine
 !-----------------------------------------------------------------------------------------------------------
 
-Subroutine Jacobi(A,b,x,tol)
+Subroutine Jacobi(A,b,x,tol,norma)
+
+    interface
+        function Norma(vector) 
+
+        !Element in/out
+        real(8),intent(in)      :: Vector(:)
+    
+        !Variable del sistema
+        real(8)             :: Norma
+                    
+        end function
+    end interface 
 
     !Element in/out
     Real(8),intent(inout)           :: A(:,:),b(:),x(:)
@@ -499,7 +511,20 @@ Subroutine Gauss_Seidel(A,b,x,ITE) !ITE indica la iteraciones
 End subroutine
 
 !-----------------------------------------------------------------------------------------------------------
-Subroutine Radio_espectral(A,tol,Autovalor) !Radio espectral es el máx[abs(autovalor)]
+Subroutine Radio_espectral(A,tol,Autovalor,norma) !Radio espectral es el máx[abs(autovalor)]
+
+    interface
+        function Norma(vector) 
+
+        !Element in/out
+        real(8),intent(in)      :: Vector(:)
+
+        !Variable del sistema
+        real(8)             :: Norma
+            
+        end function
+    end interface 
+
 
     !Element in/out
     Real(8), intent(inout)          :: A(:,:)
@@ -788,27 +813,78 @@ subroutine Contorno(a,b,V1,V2)
     close(10)
 
 end subroutine
-
-!-----------------------------------------------------------------------------------------------------------
-function Norma(vector) 
-
-    !Element in/out
-    real(8),intent(in)      :: Vector(:)
-    
-    !Variable del sistema
-    real(8)             :: Norma
-    integer             :: i
-               
-    Norma=0.d0
-    
-    do i=1,size(vector)
-        Norma = Norma + Vector(i)**2
-    enddo
-                    
-    Norma=sqrt(Norma)
-                    
-end function
  
 !------------------------------------------------------------------------------------------------------------   
+subroutine Fractal(X) 
 
+    real(8),intent(out)                 :: x(:)
+
+    real(8),allocatable                 :: J(:,:),b(:),Y(:),x0(:)
+    integer                             :: i
+    real(8), parameter                  :: tol=0.001
+    integer, parameter                  :: n=2, ITR=100
+
+
+    allocate(J(n,n),b(n),x0(n),Y(n))
+
+
+        J(1,1) = 3*x0(1)**2-3*x0(2)**2
+        J(1,2) = -6*x0(1)*x0(2) 
+        J(2,1) = 6*x0(1)*x0(2)
+        J(2,2) = 3*x0(1)-3*x0(2)**2
+
+        b(1) = x0(1)**3-3*x0(1)*x0(2)**2-(1.d0/6.d0)
+        b(2) = 3*x0(1)**2*x0(1)-x0(2)**3
+ 
+        call Gauss(J,b,y)
+
+        x = x0-y
+
+        if(norma(x-x0)<tol) then 
+
+            x0 = x 
+        endif
+
+end subroutine 
+!------------------------------------------------------------------------------ 
+
+subroutine newton(x,f,df,tol,max_iter,iter) !para hallar el valor de x en f(x)=0 mediante iteracciones
+    
+    real(8),intent(inout)       :: x
+    real(8),intent(in)          :: tol 
+    integer, intent(in)         :: max_iter
+    integer,intent(inout)       :: iter
+     
+    Interface
+        function F(x)
+            real(8) :: x
+            real(8) :: F
+        end function
+
+    function df(x)
+
+        real(8) :: x
+        real(8) :: df
+    
+    end function
+    
+    end interface
+    
+    !locales
+    real(8)      :: x0
+    
+    x0=x
+    
+    do iter=1,max_iter !contador del numero de iteracciones teniendo como limte la maxima, introducida anteriormete
+    
+        x=x0-(f(x0)/(df(x0))) !punto medio del intervalo
+        
+        if((abs((x-x0)/x)<tol).and.(abs(f(x))<tol)) exit !determina cuando nos hemos acercado lo sufuciente a la raiz segun la tolerancia y se puede considerar por lo tanto solucion
+    
+        x0=x
+    
+    enddo
+    
+end subroutine 
+    
 end module Algebra_lineal
