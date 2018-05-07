@@ -1,7 +1,7 @@
 program main
 
-use algebra_lineal 
 use funciones
+use algebra_lineal 
 
 !real(8)             :: a,b,It1,It2,I !para la integral por trapecios n se define como real y para la de simpson y Riemann como entero
 !integer            :: n
@@ -9,7 +9,7 @@ use funciones
 !integer:: i
 !real(8):: xsol
 !character           :: contestacion 
-real(8)             :: derivada_centrada,x,tol
+real(8)             :: tol,x
 
 tol=0.0000001
 

@@ -6,44 +6,45 @@ contains
 
 Function F(x)
 
-    Real(8)        :: X
-    Real(8)        :: F 
+    Real(8)                   :: F,x
 
-    F = x**2-5
+    F = x**2-1
 
 End function 
 !------------------------------------------------------------------    
-function derivada_progresiva(Y,x,h)
+function derivada_progresiva(dx)
 
-    Real(8),intent(in)              :: Y,X,h
+    Real(8)                         :: dx
+    Real(8)                         :: derivada_progresiva,h 
 
-    Real(8)                         :: derivada_progresiva
+    h = 0.0000001
 
-    derivada_progresiva = (F(x+h)-Y)/h
+    derivada_progresiva = (F(dx+h)-F(dx))/h
 
 end function 
 
 !-------------------------------------------------------------------
-function derivada_regresiva(Y,x,h)
+function derivada_regresiva(dx)
 
-    Real(8),intent(in)              :: Y,X,h
+    Real(8)                          :: dx
+    Real(8)                          :: derivada_regresiva,h 
 
-    Real(8)                         :: derivada_regresiva
+    h = 0.0000001
 
-    derivada_regresiva = (F(x-2*h)-4*F(x-h)+3*Y)/2*h
+    derivada_regresiva = (F(dx-2*h)-4*F(dx-h)+3*F(dx))/2*h
 
 end function
 
 !--------------------------------------------------------------------
-function derivada_centrada(x)
+function derivada_centrada(dx)
 
-    Real(8),intent(in)              :: x
+    Real(8)                         :: dx
 
     Real(8)                         :: derivada_centrada,h
 
-    h=0.00001
+    h=0.00000001
 
-    derivada_centrada = (F(x+h)-F(x-h))/h
+    derivada_centrada = (F(dx+h)-F(dx-h))/h
 
 end function
 
@@ -84,7 +85,7 @@ end function
 function Norma(vector) 
 
     !Element in/out
-    real(8),intent(in)      :: Vector(:)
+    real(8)             :: Vector(:)
     
     !Variable del sistema
     real(8)             :: Norma
@@ -99,5 +100,30 @@ function Norma(vector)
     Norma=sqrt(Norma)
                     
 end function
+!--------------------------------------------------------------------
+function Fs1(x,y) 
+
+    !Element in/out  
+    real(8)                 :: x,y 
+
+    !local variable
+    real(8)                 :: Fs1 
+
+    Fs1 = x**3-3*x*y**2-(1.d0/6.d0)
+
+end function 
+
+!--------------------------------------------------------------------
+function Fs2(x,y) 
+
+    !Element in/out  
+    real(8)                 :: x,y 
+    
+    !local variable
+    real(8)                 :: Fs2
+    
+    Fs2 = 3*x**2*y-y**3
+end function 
+
 !--------------------------------------------------------------------
 end module

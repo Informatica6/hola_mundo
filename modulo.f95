@@ -1,21 +1,30 @@
 !------------------------------------------------------------------------------------------------------
 !                                          BIBLIOTECA                                                 
-! Producto(A,b,axb,info) matriz A,matriz b, axb multiplicacion --------------------------------20      
-! Potencia(A,k,Ak)  matriz A, k= pontencia a la que elevas, ak= matriz hecha la potencia-------47                                                                       
-! Inversa (A,AI) matriz A a la que quieres hacer la inversa Ai matriz inversa------------------70
-! Gauss(A,b,x) Ax=b----------------------------------------------------------------------------148
-! FactorizacionLU(A,Al,Au) A matriz que quieres factorizar en LU Al(lower), Au(upper)----------203
-! GaussFactorLU(A,b,X) Ax=b--------------------------------------------------------------------262
-! MiniCu(A) A devulve los coeficientes del polinomio-------------------------------------------312
-! Jacobi(A,b,Tol,x) Ax=b , donde tol es la tolerancia------------------------------------------359
-! GAUSS_SEIDEL(A,b,x,ITE) Ax=b, donde ITE es la iteraciones------------------------------------427
-! Radio_espectral (A,b,tol,autovalor)----------------------------------------------------------492
+! Producto(A,b,axb,info) matriz A,matriz b, axb multiplicacion --------------------------------29      
+! Potencia(A,k,Ak)  matriz A, k= pontencia a la que elevas, ak= matriz hecha la potencia-------56         /////////////////////////////////////                                                              
+! Inversa (A,AI) matriz A a la que quieres hacer la inversa Ai matriz inversa------------------79         //             Grupo 6             //  
+! Gauss(A,b,x) Ax=b----------------------------------------------------------------------------157        //        Pablo López Salazar      //  
+! FactorizacionLU(A,Al,Au) A matriz que quieres factorizar en LU Al(lower), Au(upper)----------212        //    Marcos de la Fuente Hansen   //  
+! GaussFactorLU(A,b,X) Ax=b--------------------------------------------------------------------271        //     Beatríz Martínez Sutil      //
+! MiniCu(A) A devulve los coeficientes del polinomio-------------------------------------------321        //          Lucia Millara          //  
+! Jacobi(A,b,Tol,x) Ax=b , donde tol es la tolerancia------------------------------------------368        /////////////////////////////////////
+! GAUSS_SEIDEL(A,b,x,ITE) Ax=b, donde ITE es la iteraciones------------------------------------451          
+! Radio_espectral (A,b,tol,autovalor)----------------------------------------------------------516
+! Riemann(f,a,b,I) Metodo de integracion-------------------------------------------------------574
+! Trapecio(f,a,b,n,It2) Metodo de integracion--------------------------------------------------604
+! Simpson(f,a,b,n,It1) Metodo de integracion---------------------------------------------------634
+! mbisectriz(f,a,b,tol,xsol) Metodo para determinar ceros--------------------------------------668
+! Contorno(a,b,V1,V2,norma) Practica de metal caliente-----------------------------------------717
+! Newton_Raphson(x,tol,f,derivada_centrada) Metodo para determinar ceros-----------------------831
+! Fractal(X,tol,norma,Fs1,Fs2)-----------------------------------------------------------------872
+! Euler(Fs1,x,y,h) Metodo para determinar F a partir de dF-------------------------------------944
 !----------------------------------------------------------------------------------------------------
 module Algebra_lineal
 
 implicit none
 
-contains
+contains 
+
 
 Subroutine Producto(A,B,AxB,info)
 
@@ -354,18 +363,19 @@ Subroutine MiniCu(A)
     call Gauss(M,B,A)
 
 End subroutine
-!-----------------------------------------------------------------------------------------------------------
 
+!-----------------------------------------------------------------------------------------------------------
 Subroutine Jacobi(A,b,x,tol,norma)
 
     interface
         function Norma(vector) 
 
         !Element in/out
-        real(8)                 :: Vector(:)
+        real(8)                             :: Vector(:)
     
         !Variable del sistema
-        real(8)                 :: Norma
+        real(8)                             :: Norma
+        integer                             :: i
                     
         end function
     end interface
@@ -376,7 +386,6 @@ Subroutine Jacobi(A,b,x,tol,norma)
 
     !Variables internas
     integer                         :: i,j,k,m,P
-    Real(8)                         :: autovalor
     real(8), allocatable            :: Ab(:,:),PIV(:),V(:),L(:,:),D(:,:),ID(:,:),U(:,:),C(:),T(:,:),Xant(:)
         
     m = size(A,1)
@@ -599,10 +608,10 @@ subroutine Trapecio(f,a,b,n,It2)
         end function
     end interface
         
-    real(8),intent(inout)           ::a,b
-    real(8),intent(out)             ::It2
-    real(8)                         ::x1,x2,h,A1,A2
-    integer                         :: n,j
+    real(8),intent(inout)           ::  a,b
+    real(8),intent(out)             ::  It2
+    real(8)                         ::  x1,x2,h,A1,A2
+    integer                         ::  n,j
         
     It2=0
         
@@ -823,12 +832,13 @@ subroutine Newton_Raphson(x,tol,f,derivada_centrada)
     Interface
 
         function F(x)
-            real(8)             :: x
-            real(8)             :: F
+            real(8)                         :: x
+            real(8)                         :: F
         end function
 
-        function derivada_centrada(x)
-            real(8)             ::  derivada_centrada,x
+        function derivada_centrada(dx)
+            real(8)                         :: dx
+            real(8)                         :: derivada_centrada
         end function
     
     end interface
@@ -854,13 +864,11 @@ subroutine Newton_Raphson(x,tol,f,derivada_centrada)
         x0=x
 
     enddo
-
-    write(*,*) X
                         
 end subroutine
 
 !------------------------------------------------------------------------------------------------------------   
-subroutine Fractal(X,tol,N) 
+subroutine Fractal(X,tol,norma,Fs1,Fs2) 
 
     interface
         function Norma(vector) 
@@ -870,38 +878,89 @@ subroutine Fractal(X,tol,N)
     
         !Variable del sistema
         real(8)                 :: Norma
+        integer                 :: i
                     
         end function
+
+        function Fs1(x,y) 
+
+            !Element in/out  
+            real(8)                 :: x,y 
+            
+            !local variable
+            real(8)                 :: Fs1 
+        
+         end function 
+            
+        function Fs2(x,y) 
+            
+            !Element in/out  
+            real(8)                 :: x,y 
+                
+            !local variable
+            real(8)                 :: Fs2 
+        end function 
     end interface
 
-    real(8),intent(out)                 :: x(:)
+    !Element in/out
+    real(8),intent(inout)               :: x(:)
     real(8), intent(in)                 :: tol
-    integer, intent(in)                 :: N
 
-    real(8),allocatable                 :: J(:,:),b(:),Y(:),xant(:)
+    !Local variebla
+    real(8),allocatable                 :: JF(:,:),b(:),Y(:),xant(:)
     integer                             :: i
+    real(8)                             :: h 
 
-    do i = 1, N 
+    h = 0.0000000000001 !Variable para las derivadas parciales
 
-    allocate(J(n,n),b(n),xant(n),Y(n))
+    allocate(JF(2,2),b(2),xant(2),Y(2))
 
-    J(1,1) = 3*xant(1)**2-3*xant(2)**2
-    J(1,2) = -6*xant(1)*xant(2) 
-    J(2,1) = 6*xant(1)*xant(2)
-    J(2,2) = 3*xant(1)**2-3*xant(2)**2
+    xant = x
+    
+    do i = 1,1000
 
-    b(1) = xant(1)**3-3*xant(1)*xant(2)**2-(1.d0/6.d0)
-    b(2) = 3*xant(1)**2*xant(1)-xant(2)**3
+        JF(1,1) = (Fs1(xant(1)+h,xant(2))-Fs1(xant(1)-h,xant(2)))/h !   Creando matriz
+        JF(1,2) = (Fs1(xant(1),xant(2)+h)-Fs1(xant(1),xant(2)-h))/h !
+        JF(2,1) = (Fs2(xant(1)+h,xant(2))-Fs2(xant(1)-h,xant(2)))/h !     Jacobiana 
+        JF(2,2) = (Fs2(xant(1),xant(2)+h)-Fs2(xant(1),xant(2)-h))/h ! para dos ecuaciones
+
+        b(1) = Fs1(xant(1),xant(2))
+        b(2) = Fs2(xant(1),xant(2))
  
-    call Gauss(J,b,y)
+        call Gauss(JF,b,y) 
 
-    x = xant-y
+        x = xant-y !Se obtiene X(n+1) es decir la siguiente de x(n) 
         
-    if(Norma(x-xant)<tol) write(*,*) X
+        if(Norma(x-xant)<tol) exit !La solucion será aquella en la cual las dos variables sean cero 
+
+        xant = x
 
     enddo
 
 end subroutine 
 
-!------------------------------------------------------------------------------------------------------------- 
+!-------------------------------------------------------------------------------------------------------------
+subroutine Euler(Fs1,x,y,h)
+
+    interface
+        function Fs1(x,y) 
+
+            !Element in/out  
+            real(8)                 :: x,y 
+    
+            !local variable
+            real(8)                 :: Fs1 
+    
+        end function 
+    end interface
+
+    !Element in/out 
+    Real(8), intent(inout)                  :: y,x
+    real(8), intent(in)                     :: h
+
+    y=y+h*fs1(x,y) !Ecuacion de euler la y siguente es igual a la y anterior por h más el valor de la derivada en el punto anterior
+    
+end subroutine 
+    
+!-------------------------------------------------------------------------------------------------------------
 end module Algebra_lineal
