@@ -109,7 +109,7 @@ function Fs1(x,y)
     !local variable
     real(8)                 :: Fs1 
 
-    Fs1 = x**3-3*x*y**2-(1.d0/6.d0)
+    Fs1 = y-x**2+1
 
 end function 
 

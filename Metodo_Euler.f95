@@ -33,4 +33,6 @@ program M_Euler
 
     close(10)
 
+    call system ('python Grafica_E.py')
+
 end program M_Euler

@@ -7,7 +7,7 @@ y = data[:,1]
 
 plt.plot(x,y, 'b')
 
-x1=np.arange(-5,5,0.001)
+x1=np.arange(0,2,0.001)
 
 y1=(x1+1)**2-np.exp(x1)/2
 

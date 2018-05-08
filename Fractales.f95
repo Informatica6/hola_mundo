@@ -75,4 +75,6 @@ ENDDO
 
 CLOSE(10)
 
+call system('python G_Fractal.py')
+
 END PROGRAM fractales   
