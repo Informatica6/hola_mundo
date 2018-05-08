@@ -964,7 +964,7 @@ end subroutine
     
 !-------------------------------------------------------------------------------------------------------------
 
-subroutine Juego(Zombie,Remove,Susceptible)
-    
+subroutine Game(Zombie,Remove,Susceptible)
+
 end subroutine 
 end module Algebra_lineal

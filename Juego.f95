@@ -1,4 +1,4 @@
-Program Juego
+Program Game
 
     use funciones
     use algrebra_lineal
@@ -14,5 +14,5 @@ Program Juego
 
 
 
-    !call system(python G_Juego.py)
-end program Juego
+    !call system(python G_Game.py)
+end program Game

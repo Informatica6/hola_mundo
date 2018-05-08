@@ -128,7 +128,7 @@ end function
 !--------------------------------------------------------------------
 
 
-!                       Juego del apocalisis Zombie 
+!                       Zombies` Apocalypse Game
     function Zombie(dz)
     end function
 
