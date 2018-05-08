@@ -126,4 +126,19 @@ function Fs2(x,y)
 end function 
 
 !--------------------------------------------------------------------
+
+
+!                       Juego del apocalisis Zombie 
+    function Zombie(dz)
+    end function
+
+    function Susceptible(ds)
+    end function 
+
+    function Remove(dr)
+    end function 
+
+    function Infectacion(di) 
+    end function 
+!____________________________________________________________________
 end module

@@ -963,4 +963,8 @@ subroutine Euler(Fs1,x,y,h)
 end subroutine 
     
 !-------------------------------------------------------------------------------------------------------------
+
+subroutine Juego(Zombie,Remove,Susceptible)
+    
+end subroutine 
 end module Algebra_lineal
