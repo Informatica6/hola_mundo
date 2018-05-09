@@ -974,9 +974,9 @@ subroutine Game(dr,dz,ds,di,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,h)
 
         end function
 
-        function ds(BR,ZKH,S,Z,D,V)                  
+        function ds(BR,ZKH,S,Z,D,V,I)                  
 
-            real(8)             :: S,Z,ZKH,BR,D,V  
+            real(8)             :: S,Z,ZKH,BR,D,V,I  
             real(8)             :: ds                 
                                                     
         end function 
@@ -988,9 +988,9 @@ subroutine Game(dr,dz,ds,di,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,h)
         
         end function
 
-        function di(ZKH,TIZ,D,S,Z,I)                    
+        function di(ZKH,TIZ,D,S,Z,I,V)                    
 
-            real(8)             :: ZKH,TIZ,D,S,Z,I      
+            real(8)             :: ZKH,TIZ,D,S,Z,I,V    
             real(8)             :: di
 
         end function
@@ -1000,8 +1000,8 @@ subroutine Game(dr,dz,ds,di,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,h)
     real(8), intent(inout)                  :: S,R,Z,I
     real(8), intent(in)                     :: h,TIZ,HKZ,ZKH,D,BR,DTIZ,V
 
-    S=S+h*ds(BR,ZKH,S,Z,D,V)
-    I=I+h*di(ZKH,TIZ,D,S,Z,I)      
+    S=S+h*ds(BR,ZKH,S,Z,D,V,I)
+    I=I+h*di(ZKH,TIZ,D,S,Z,I,V)      
     Z=Z+h*dz(TIZ,I,R,S,Z,DTIZ,HKZ,V)
     R=R+h*Dr(D,S,I,HKZ,DTIZ,R,Z)      
 

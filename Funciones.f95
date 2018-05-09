@@ -135,16 +135,16 @@ end function
         real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V   ! V vacuna
         real(8)             :: dz
 
-        dz= TIZ*I+DTIZ*R-HKZ*S*Z-V*Z
+        dz= TIZ*I+DTIZ*R-HKZ*S*Z
 
     end function
 
-    function ds(BR,ZKH,S,Z,D,V)                     ! Susceptible
+    function ds(BR,ZKH,S,Z,D,V,I)                     ! Susceptible
 
-        real(8)             :: S,Z,ZKH,BR,D,V       ! ZKH zombie kills human propension marginal a que un humano sea asesinado por un zombie         
+        real(8)             :: S,Z,ZKH,BR,D,V,I       ! ZKH zombie kills human propension marginal a que un humano sea asesinado por un zombie         
         real(8)             :: ds 
                                                     ! BR Personas que existen al principio
-        ds= BR-ZKH*S*Z-D*S+V*Z                      
+        ds= BR-ZKH*S*Z-D*S+V*I                      
                                                     ! D propension marginal a morir por casusas naturales 
     end function 
 
@@ -157,12 +157,12 @@ end function
 
     end function 
 
-    function di(ZKH,TIZ,D,S,Z,I)                    ! Infected 
+    function di(ZKH,TIZ,D,S,Z,I,V)                    ! Infected 
 
-        real(8)             :: ZKH,TIZ,D,S,Z,I      ! TIZ turn into zombie propension marginal a comvertirse en un zombie 
+        real(8)             :: ZKH,TIZ,D,S,Z,I,V      ! TIZ turn into zombie propension marginal a comvertirse en un zombie 
         real(8)             :: di
 
-        di= ZKH*S*Z-TIZ*I-D*I 
+        di= ZKH*S*Z-TIZ*I-D*I-V*I 
 
     end function 
 !____________________________________________________________________
