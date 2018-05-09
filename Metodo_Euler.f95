@@ -3,36 +3,35 @@ program M_Euler
     use funciones
     use algebra_lineal
 
-    real(8)                 :: a,b,x,y
-    real(8)                 :: h
-    integer                 :: i,N 
+    real(8)                 :: tiempo,S,R,Z,I,TIZ,T,HKZ,ZKH,D,BR,DTIZ,V,h 
+    integer, parameter      :: N=100000
+    integer                 :: j
 
 
-    write(*,*) 'Escriba el intervalo'
-    read(*,*) a,b 
+    write(*,*) 'Tiempo que quieres que trascurra'
+    read(*,*) tiempo
 
-    write(*,*) 'Escriba el numero de particiones'
-    read(*,*) N 
+    open (unit=10, file='parametros.txt')
 
-    write(*,*) 'Escriba el valor inicial'
-    read(*,*) Y
+        read(10,*) 
+        read(10,*) S,R,I,Z,V,TIZ,HKZ,ZKH,D,BR,DTIZ
 
-    h=(b-a)/(N-0.d0)
+    close(10)
 
-    open (unit=10, file='puntosE.txt', status='unknown')
+    h=tiempo/(N-0.d0)
 
-        do i=0,N-1
+    open (unit=10, file='Juego.txt', status='unknown')
 
-            x=a+i*h 
+        do j=0,N-1 
 
-            call Euler(fs1,x,y,h)
+            call Game(dr,dz,ds,di,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,h)
 
-            write(10,*) x, y
+            write(10,*) S,Z,R,I,j*h
 
         enddo
 
     close(10)
 
-    call system ('python Grafica_E.py')
+    call system ('python G_juego.py')
 
 end program M_Euler

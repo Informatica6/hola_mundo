@@ -963,8 +963,49 @@ subroutine Euler(Fs1,x,y,h)
 end subroutine 
     
 !-------------------------------------------------------------------------------------------------------------
+subroutine Game(dr,dz,ds,di,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,h)
 
-subroutine Game(Zombie,Remove,Susceptible)
+    interface 
+
+        function dz(TIZ,I,R,S,Z,DTIZ,HKZ,V)
+
+            real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V
+            real(8)             :: dz
+
+        end function
+
+        function ds(BR,ZKH,S,Z,D,V)                  
+
+            real(8)             :: S,Z,ZKH,BR,D,V  
+            real(8)             :: ds                 
+                                                    
+        end function 
+
+        function Dr(D,S,I,HKZ,DTIZ,R,Z)                   
+
+            real(8)             :: D,S,I,HKZ,DTIZ,R,Z 
+            real(8)             :: dr                   
+        
+        end function
+
+        function di(ZKH,TIZ,D,S,Z,I)                    
+
+            real(8)             :: ZKH,TIZ,D,S,Z,I      
+            real(8)             :: di
+
+        end function
+
+    end interface
+
+    real(8), intent(inout)                  :: S,R,Z,I
+    real(8), intent(in)                     :: h,TIZ,HKZ,ZKH,D,BR,DTIZ,V
+
+    S=S+h*ds(BR,ZKH,S,Z,D,V)
+    I=I+h*di(ZKH,TIZ,D,S,Z,I)      
+    Z=Z+h*dz(TIZ,I,R,S,Z,DTIZ,HKZ,V)
+    R=R+h*Dr(D,S,I,HKZ,DTIZ,R,Z)      
 
 end subroutine 
+
+!-------------------------------------------------------------------------------------------------------------
 end module Algebra_lineal

@@ -129,16 +129,41 @@ end function
 
 
 !                       Zombies` Apocalypse Game
-    function Zombie(dz)
+
+    function dz(TIZ,I,R,S,Z,DTIZ,HKZ,V)                 ! Zombies
+
+        real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V   ! V vacuna
+        real(8)             :: dz
+
+        dz= TIZ*I+DTIZ*R-HKZ*S*Z-V*Z
+
     end function
 
-    function Susceptible(ds)
+    function ds(BR,ZKH,S,Z,D,V)                     ! Susceptible
+
+        real(8)             :: S,Z,ZKH,BR,D,V       ! ZKH zombie kills human propension marginal a que un humano sea asesinado por un zombie         
+        real(8)             :: ds 
+                                                    ! BR Personas que existen al principio
+        ds= BR-ZKH*S*Z-D*S+V*Z                      
+                                                    ! D propension marginal a morir por casusas naturales 
     end function 
 
-    function Remove(dr)
+    function Dr(D,S,I,HKZ,DTIZ,R,Z)                 ! Removed
+
+        real(8)             :: D,S,I,HKZ,DTIZ,R,Z   ! DTIZ dead turns into zombie  muerto que se convierte en zombie 
+        real(8)             :: dr                   ! R eliminados , T target (punteria)
+
+        dr= D*S+HKZ*S*Z-DTIZ*R+D*I
+
     end function 
 
-    function Infectacion(di) 
+    function di(ZKH,TIZ,D,S,Z,I)                    ! Infected 
+
+        real(8)             :: ZKH,TIZ,D,S,Z,I      ! TIZ turn into zombie propension marginal a comvertirse en un zombie 
+        real(8)             :: di
+
+        di= ZKH*S*Z-TIZ*I-D*I 
+
     end function 
 !____________________________________________________________________
 end module
