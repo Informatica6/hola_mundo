@@ -963,47 +963,66 @@ subroutine Euler(Fs1,x,y,h)
 end subroutine 
     
 !-------------------------------------------------------------------------------------------------------------
-subroutine Game(dr,dz,ds,di,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,h)
+subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a)
 
     interface 
 
-        function dz(TIZ,I,R,S,Z,DTIZ,HKZ,V)
+        function dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH)
 
-            real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V
+            real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH
             real(8)             :: dz
 
         end function
 
-        function ds(BR,ZKH,S,Z,D,V,I)                  
+        function ds(BR,ZKH,S,Z,D,V,I,TIZ)                  
 
-            real(8)             :: S,Z,ZKH,BR,D,V,I  
+            real(8)             :: S,Z,ZKH,BR,D,V,I,TIZ  
             real(8)             :: ds                 
                                                     
         end function 
 
-        function Dr(D,S,I,HKZ,DTIZ,R,Z)                   
+        function Dr(D,S,I,HKZ,DTIZ,R,Z,IN)                   
 
-            real(8)             :: D,S,I,HKZ,DTIZ,R,Z 
+            real(8)             :: D,S,I,HKZ,DTIZ,R,Z,IN 
             real(8)             :: dr                   
         
         end function
 
-        function di(ZKH,TIZ,D,S,Z,I,V)                    
+        function di(ZKH,TIZ,D,S,Z,I,V,C)                    
 
-            real(8)             :: ZKH,TIZ,D,S,Z,I,V    
+            real(8)             :: ZKH,TIZ,D,S,Z,I,V,C    
             real(8)             :: di
 
         end function
 
+        function din(IN,R,D,Z,V,I,NAT) 
+        
+            real(8)             :: IN,R,D,Z,V,I,NAT
+            real(8)             :: din 
+        
+        end function
+
     end interface
 
-    real(8), intent(inout)                  :: S,R,Z,I
-    real(8), intent(in)                     :: h,TIZ,HKZ,ZKH,D,BR,DTIZ,V
+    real(8), intent(inout)                  :: S,R,Z,I,IN,ZKH
+    real(8), allocatable, intent(in)        :: a(:)
+    real(8), intent(in)                     :: h,TIZ,HKZ,D,BR,DTIZ,V,NAT,C 
 
-    S=S+h*ds(BR,ZKH,S,Z,D,V,I)
-    I=I+h*di(ZKH,TIZ,D,S,Z,I,V)      
-    Z=Z+h*dz(TIZ,I,R,S,Z,DTIZ,HKZ,V)
-    R=R+h*Dr(D,S,I,HKZ,DTIZ,R,Z)      
+    real(8)                                 :: basura
+
+    if((0.95<a(1)).and.(a(1)>1)) then 
+        ZKH=ZKH*5
+    else 
+        open(unit=10, file='parametros.txt')
+            read(*,*)basura,basura,basura,basura,basura,basura,basura,ZKH,basura,basura,basura,basura,basura 
+        close(10)
+    endif
+ 
+    S=S+h*ds(BR,ZKH,S,Z,D,V,I,TIZ)
+    I=I+h*di(ZKH,TIZ,D,S,Z,I,V,C)     
+    Z=Z+h*dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH)
+    R=R+h*Dr(D,S,I,HKZ,DTIZ,R,Z,IN)
+    IN=IN+h*din(IN,R,D,Z,V,I,NAT) 
 
 end subroutine 
 

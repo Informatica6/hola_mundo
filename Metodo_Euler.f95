@@ -3,20 +3,28 @@ program M_Euler
     use funciones
     use algebra_lineal
 
-    real(8)                 :: tiempo,S,R,Z,I,TIZ,T,HKZ,ZKH,D,BR,DTIZ,V,h 
+    real(8)                 :: S,R,Z,I,TIZ,T,HKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h 
+    real(8), allocatable    :: a 
     integer, parameter      :: N=100000
-    integer                 :: j
+    integer                 :: j,w,tiempo,k
 
-
+    allocate(A(3))
+    
     write(*,*) 'Tiempo que quieres que trascurra'
     read(*,*) tiempo
 
     open (unit=10, file='parametros.txt')
 
         read(10,*) 
-        read(10,*) S,R,I,Z,V,TIZ,HKZ,ZKH,D,BR,DTIZ
+        read(10,*) S,R,I,Z,V,TIZ,HKZ,ZKH,D,BR,DTIZ,NAT,C
 
     close(10)
+
+    IN=0
+
+    do k = 1,tiempo
+        a=rand(w)    
+    enddo
 
     h=tiempo/(N-0.d0)
 
@@ -24,9 +32,9 @@ program M_Euler
 
         do j=0,N-1 
 
-            call Game(dr,dz,ds,di,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,h)
+            call Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a)
 
-            write(10,*) S,Z,R,I,j*h
+            write(10,*) S+IN,Z,R,I,j*h
 
         enddo
 

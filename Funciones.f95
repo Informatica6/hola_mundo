@@ -130,40 +130,49 @@ end function
 
 !                       Zombies` Apocalypse Game
 
-    function dz(TIZ,I,R,S,Z,DTIZ,HKZ,V)                 ! Zombies
+    function dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH)                 ! Zombies
 
-        real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V   ! V vacuna
+        real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH   ! V vacuna
         real(8)             :: dz
 
-        dz= TIZ*I+DTIZ*R-HKZ*S*Z
+        dz= TIZ*I+DTIZ*R-HKZ*S*Z-HKZ*Z*IN+ZKH*S*Z
 
     end function
 
-    function ds(BR,ZKH,S,Z,D,V,I)                     ! Susceptible
+    function ds(BR,ZKH,S,Z,D,V,I,TIZ)                       ! Susceptible
 
-        real(8)             :: S,Z,ZKH,BR,D,V,I       ! ZKH zombie kills human propension marginal a que un humano sea asesinado por un zombie         
+        real(8)             :: S,Z,ZKH,BR,D,V,I,TIZ         ! ZKH zombie kills human propension marginal a que un humano sea asesinado por un zombie         
         real(8)             :: ds 
-                                                    ! BR Personas que existen al principio
-        ds= BR-ZKH*S*Z-D*S+V*I                      
-                                                    ! D propension marginal a morir por casusas naturales 
+                                                            ! BR Personas que existen al principio
+        ds= BR-ZKH*S*Z-D*S-I*TIZ                    
+                                                            ! D propension marginal a morir por casusas naturales 
     end function 
 
-    function Dr(D,S,I,HKZ,DTIZ,R,Z)                 ! Removed
+    function Dr(D,S,I,HKZ,DTIZ,R,Z,IN)                 ! Removed
 
-        real(8)             :: D,S,I,HKZ,DTIZ,R,Z   ! DTIZ dead turns into zombie  muerto que se convierte en zombie 
-        real(8)             :: dr                   ! R eliminados , T target (punteria)
+        real(8)             :: D,S,I,HKZ,DTIZ,R,Z,IN   ! DTIZ dead turns into zombie  muerto que se convierte en zombie 
+        real(8)             :: dr                      ! R eliminados , T target (punteria)
 
-        dr= D*S+HKZ*S*Z-DTIZ*R+D*I
+        dr= D*S+HKZ*S*Z-DTIZ*R+D*I+D*IN+HKZ*Z*IN
 
     end function 
 
-    function di(ZKH,TIZ,D,S,Z,I,V)                    ! Infected 
+    function di(ZKH,TIZ,D,S,Z,I,V,C)                    ! Infected 
 
-        real(8)             :: ZKH,TIZ,D,S,Z,I,V      ! TIZ turn into zombie propension marginal a comvertirse en un zombie 
+        real(8)             :: ZKH,TIZ,D,S,Z,I,V,C      ! TIZ turn into zombie propension marginal a comvertirse en un zombie 
         real(8)             :: di
 
-        di= ZKH*S*Z-TIZ*I-D*I-V*I 
+        di= C*S-TIZ*I-D*I-V*I
 
     end function 
+    
+    function din(IN,R,D,Z,V,I,NAT) 
+        
+        real(8)             :: IN,R,D,Z,V,I,NAT
+        real(8)             :: din 
+
+        din=I*V+NAT*IN
+
+    end function
 !____________________________________________________________________
 end module
