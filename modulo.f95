@@ -963,13 +963,13 @@ subroutine Euler(Fs1,x,y,h)
 end subroutine 
     
 !-------------------------------------------------------------------------------------------------------------
-subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a)
+subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a,tiempo,count,N)
 
     interface 
 
-        function dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH)
+        function dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH,I)
 
-            real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH
+            real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH,I
             real(8)             :: dz
 
         end function
@@ -995,34 +995,44 @@ subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a)
 
         end function
 
-        function din(IN,R,D,Z,V,I,NAT) 
+        function din(IN,R,D,Z,V,I,NAT,ZKH) 
         
-            real(8)             :: IN,R,D,Z,V,I,NAT
+            real(8)             :: IN,R,D,Z,V,I,NAT,ZKH
             real(8)             :: din 
         
         end function
 
     end interface
 
-    real(8), intent(inout)                  :: S,R,Z,I,IN,ZKH
+    real(8), intent(inout)                  :: S,R,Z,I,IN,HKZ
     real(8), allocatable, intent(in)        :: a(:)
-    real(8), intent(in)                     :: h,TIZ,HKZ,D,BR,DTIZ,V,NAT,C 
+    real(8), intent(in)                     :: h,TIZ,ZKH,D,BR,DTIZ,V,NAT,C
+    integer, intent(inout)                  :: tiempo,count
+    integer, intent(in)                     :: N
 
-    real(8)                                 :: basura
+    integer                                 :: j
+    real(8)                                 :: comp
 
-    if((0.95<a(1)).and.(a(1)>1)) then 
-        ZKH=ZKH*5
-    else 
-        open(unit=10, file='parametros.txt')
-            read(*,*)basura,basura,basura,basura,basura,basura,basura,ZKH,basura,basura,basura,basura,basura 
-        close(10)
-    endif
- 
+    HKZ = HKZ + 0.01/(N-0.d0)
+    write(*,*) HKZ
+!        do j=1,tiempo
+ !           if((0.70d0<a(j)).and.(a(j)<1.d0)) then
+ !               if(count/=10) then 
+ !                   ZKH=ZKH*1.12
+ !                   comp=ZKH
+ !                   count=count+1
+ !                   write(*,*) 'entre'
+ !               end if
+ !           else if(Comp==ZKH*1.12*10) then
+ !               ZKH = ZKH/1.12*10
+ !           endif
+ !       enddo
+
     S=S+h*ds(BR,ZKH,S,Z,D,V,I,TIZ)
     I=I+h*di(ZKH,TIZ,D,S,Z,I,V,C)     
-    Z=Z+h*dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH)
+    Z=Z+h*dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH,I)
     R=R+h*Dr(D,S,I,HKZ,DTIZ,R,Z,IN)
-    IN=IN+h*din(IN,R,D,Z,V,I,NAT) 
+    IN=IN+h*din(IN,R,D,Z,V,I,NAT,ZKH) 
 
 end subroutine 
 

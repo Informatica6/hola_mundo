@@ -4,11 +4,9 @@ program M_Euler
     use algebra_lineal
 
     real(8)                 :: S,R,Z,I,TIZ,T,HKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h 
-    real(8), allocatable    :: a 
+    real(8), allocatable    :: a(:) 
     integer, parameter      :: N=100000
-    integer                 :: j,w,tiempo,k
-
-    allocate(A(3))
+    integer                 :: j,w,tiempo,k,count
     
     write(*,*) 'Tiempo que quieres que trascurra'
     read(*,*) tiempo
@@ -21,10 +19,15 @@ program M_Euler
     close(10)
 
     IN=0
+    count=0
 
-    do k = 1,tiempo
-        a=rand(w)    
-    enddo
+    allocate(A(tiempo))
+
+    !do k = 1,tiempo
+    !    a(k)=rand(w)    
+    !enddo
+
+    !write(*,*) a
 
     h=tiempo/(N-0.d0)
 
@@ -32,7 +35,7 @@ program M_Euler
 
         do j=0,N-1 
 
-            call Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a)
+            call Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a,tiempo,count,N)
 
             write(10,*) S+IN,Z,R,I,j*h
 

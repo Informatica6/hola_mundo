@@ -130,12 +130,12 @@ end function
 
 !                       Zombies` Apocalypse Game
 
-    function dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH)                 ! Zombies
+    function dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH,I)                 ! Zombies
 
-        real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH   ! V vacuna
+        real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH,I   ! V vacuna
         real(8)             :: dz
 
-        dz= TIZ*I+DTIZ*R-HKZ*S*Z-HKZ*Z*IN+ZKH*S*Z
+        dz= TIZ*I+DTIZ*R-HKZ*S*Z-HKZ*Z*IN+ZKH*S*Z-HKZ*I*Z
 
     end function
 
@@ -151,7 +151,7 @@ end function
     function Dr(D,S,I,HKZ,DTIZ,R,Z,IN)                 ! Removed
 
         real(8)             :: D,S,I,HKZ,DTIZ,R,Z,IN   ! DTIZ dead turns into zombie  muerto que se convierte en zombie 
-        real(8)             :: dr                      ! R eliminados , T target (punteria)
+        real(8)             :: dr                       ! R eliminados 
 
         dr= D*S+HKZ*S*Z-DTIZ*R+D*I+D*IN+HKZ*Z*IN
 
@@ -166,12 +166,12 @@ end function
 
     end function 
     
-    function din(IN,R,D,Z,V,I,NAT) 
+    function din(IN,R,D,Z,V,I,NAT,ZKH) 
         
-        real(8)             :: IN,R,D,Z,V,I,NAT
+        real(8)             :: IN,R,D,Z,V,I,NAT,ZKH
         real(8)             :: din 
 
-        din=I*V+NAT*IN
+        din=I*V+NAT*IN-ZKH*IN
 
     end function
 !____________________________________________________________________
