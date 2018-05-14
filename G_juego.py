@@ -9,11 +9,19 @@ S = data[:,0]
 Z = data[:,1]
 R = data[:,2]
 I = data[:,3]
-T = data[:,4]
+T = data[:,4] 
 
-plt.plot(T,S,'b')
-plt.plot(T,Z,'g') 
-plt.plot(T,I,'y')
-plt.plot(T,R,'r') 
+fig, ax = plt.subplots()
+ax.plot(T, S, 'b', label='Supervivientes')
+ax.plot(T, Z, 'g', label='Zombies')
+ax.plot(T, I, 'y', label='Infectados')
+ax.plot(T,R, 'r', label='Muertos')
+
+ax.set_title('Apocalipsis Zombie')
+ax.set_xlabel('Meses')
+ax.set_ylabel('Número de individuos')
+legend = ax.legend(loc='upper right', shadow=True, fontsize='x-large')
+
+legend.get_frame().set_facecolor('#E6E1E0')
 
 plt.show()

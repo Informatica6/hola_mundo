@@ -135,16 +135,16 @@ end function
         real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH   ! V vacuna
         real(8)             :: dz
 
-        dz = TIZ*I+DTIZ*R-HKZ*S*Z-HKZ*Z*IN-HKZ*I*Z*(0.10)
+        dz = TIZ*I+DTIZ*R-HKZ*S*Z-HKZ*Z*IN-HKZ*I*Z
 
     end function
 
-    function ds(BR,ZKH,S,Z,D,V,I,C)                       ! Susceptible
+    function ds(ZKH,S,Z,D,V,I,C)                       ! Susceptible
 
-        real(8)             :: S,Z,ZKH,BR,D,V,I,C         ! ZKH zombie kills human propension marginal a que un humano sea asesinado por un zombie         
+        real(8)             :: S,Z,ZKH,D,V,I,C         ! ZKH zombie kills human propension marginal a que un humano sea asesinado por un zombie         
         real(8)             :: ds 
                                                             ! BR Personas que existen al principio
-        ds = BR-ZKH*S*Z-D*S-C*S                    
+        ds = S-ZKH*S*Z*(0.9)-D*S-C*S                    
                                                             ! D propension marginal a morir por casusas naturales 
     end function 
 
@@ -153,7 +153,7 @@ end function
         real(8)             :: D,S,I,HKZ,DTIZ,R,Z,IN,ZKH   ! DTIZ dead turns into zombie  muerto que se convierte en zombie 
         real(8)             :: dr                       ! R eliminados 
 
-        dr = D*S+HKZ*S*Z-DTIZ*R+D*I+D*IN+HKZ*Z*IN+HKZ*I*Z
+        dr = D*(S+IN+I)+ZKH*Z*(0.9)*(IN+I+S)-DTIZ*R
 
     end function 
 
@@ -162,7 +162,7 @@ end function
         real(8)             :: ZKH,TIZ,D,S,Z,I,V,C      ! TIZ turn into zombie propension marginal a comvertirse en un zombie 
         real(8)             :: di
 
-        di = C*S-TIZ*I-D*I-V*I+ZKH*(0.10)*Z*S
+        di = C*S-TIZ*I-D*I-V*I+ZKH*Z*S*(0.10)           !Los infectados se camuflan entre los zombie
 
     end function 
     
@@ -171,7 +171,7 @@ end function
         real(8)             :: IN,R,D,Z,V,I,NAT,ZKH
         real(8)             :: din 
 
-        din = I*V+NAT*IN-IN*D
+        din = I*V+NAT*IN-IN*D-ZKH*IN*Z
 
     end function
 !____________________________________________________________________

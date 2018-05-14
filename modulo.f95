@@ -963,7 +963,7 @@ subroutine Euler(Fs1,x,y,h)
 end subroutine 
     
 !-------------------------------------------------------------------------------------------------------------
-subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,THKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a,tiempo,count,N,HKZ)
+subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,THKZ,ZKH,D,DTIZ,V,IN,NAT,C,h,a,tiempo,count,N,HKZ,DES)
 
     interface 
 
@@ -974,9 +974,9 @@ subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,THKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a,ti
 
         end function
 
-        function ds(BR,ZKH,S,Z,D,V,I,C)                       
+        function ds(ZKH,S,Z,D,V,I,C)                       
 
-            real(8)             :: S,Z,ZKH,BR,D,V,I,C                 
+            real(8)             :: S,Z,ZKH,D,V,I,C                 
             real(8)             :: ds                     
                                                                     
         end function
@@ -990,7 +990,7 @@ subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,THKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a,ti
 
         function di(ZKH,TIZ,D,S,Z,I,V,C)                    
 
-            real(8)             :: ZKH,TIZ,D,S,Z,I,V,C    
+            real(8)             :: ZKH,TIZ,D,S,Z,I,V,C   
             real(8)             :: di
 
         end function
@@ -1004,37 +1004,21 @@ subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,THKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a,ti
 
     end interface
 
-    real(8), intent(inout)                  :: S,R,Z,I,IN,HKZ
+    real(8), intent(inout)                  :: S,R,Z,I,IN,HKZ,V
     real(8), allocatable, intent(in)        :: a(:)
-    real(8), intent(in)                     :: h,TIZ,ZKH,D,BR,DTIZ,V,NAT,C,THKZ
+    real(8), intent(in)                     :: h,TIZ,ZKH,D,DTIZ,NAT,C,THKZ,DES
     integer, intent(inout)                  :: tiempo,count
     integer, intent(in)                     :: N
 
-    integer                                 :: j
-    real(8)                                 :: comp
+    HKZ = HKZ + THKZ/(N-0.d0)
+    V = V + DES/(N-0.d0)
 
-    !HKZ = HKZ + THKZ/(N-0.d0)
-
-!        do j=1,tiempo
- !           if((0.70d0<a(j)).and.(a(j)<1.d0)) then
- !               if(count/=10) then 
- !                   ZKH=ZKH*1.12
- !                   comp=ZKH
- !                   count=count+1
- !                   write(*,*) 'entre'
- !               end if
- !           else if(Comp==ZKH*1.12*10) then
- !               ZKH = ZKH/1.12*10
- !           endif
- !       enddo
-
-    S=S+h*ds(BR,ZKH,S,Z,D,V,I,C)
+    S=S+h*ds(ZKH,S,Z,D,V,I,C)
     I=I+h*di(ZKH,TIZ,D,S,Z,I,V,C)     
     Z=Z+h*dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH)
     R=R+h*Dr(D,S,I,HKZ,DTIZ,R,Z,IN,ZKH)  
     IN=IN+h*din(IN,R,D,Z,V,I,NAT,ZKH) 
-
-    write(*,*) S,I,IN,Z
+    
 end subroutine 
 
 !-------------------------------------------------------------------------------------------------------------
