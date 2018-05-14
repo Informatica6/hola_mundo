@@ -1,2 +1,2 @@
-S       R       I       Z       V           TIZ         HKZ         ZKH         D           BR          DTIZ            NAT         C
-500    0       0       0        0.005       0.1         0           0.01       0.01         0           0.0008         0.03         0.4
+S       R       I       Z       V           TIZ         THKZ        ZKH         D           BR          DTIZ        NAT         C           HKZ
+500     0       0       1       0.111       1.6           0        0.1         0.001        0           0.008        0.01        9           0.02 

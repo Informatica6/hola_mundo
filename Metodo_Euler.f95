@@ -3,7 +3,7 @@ program M_Euler
     use funciones
     use algebra_lineal
 
-    real(8)                 :: S,R,Z,I,TIZ,T,HKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h 
+    real(8)                 :: S,R,Z,I,TIZ,T,THKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,HKZ
     real(8), allocatable    :: a(:) 
     integer, parameter      :: N=100000
     integer                 :: j,w,tiempo,k,count
@@ -14,7 +14,7 @@ program M_Euler
     open (unit=10, file='parametros.txt')
 
         read(10,*) 
-        read(10,*) S,R,I,Z,V,TIZ,HKZ,ZKH,D,BR,DTIZ,NAT,C
+        read(10,*) S,R,I,Z,V,TIZ,THKZ,ZKH,D,BR,DTIZ,NAT,C,HKZ
 
     close(10)
 
@@ -35,7 +35,7 @@ program M_Euler
 
         do j=0,N-1 
 
-            call Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a,tiempo,count,N)
+            call Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,THKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a,tiempo,count,N,HKZ)
 
             write(10,*) S+IN,Z,R,I,j*h
 

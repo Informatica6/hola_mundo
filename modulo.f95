@@ -963,27 +963,27 @@ subroutine Euler(Fs1,x,y,h)
 end subroutine 
     
 !-------------------------------------------------------------------------------------------------------------
-subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a,tiempo,count,N)
+subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,THKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a,tiempo,count,N,HKZ)
 
     interface 
 
-        function dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH,I)
+        function dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH)
 
-            real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH,I
+            real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH
             real(8)             :: dz
 
         end function
 
-        function ds(BR,ZKH,S,Z,D,V,I,TIZ)                  
+        function ds(BR,ZKH,S,Z,D,V,I,C)                       
 
-            real(8)             :: S,Z,ZKH,BR,D,V,I,TIZ  
-            real(8)             :: ds                 
-                                                    
-        end function 
+            real(8)             :: S,Z,ZKH,BR,D,V,I,C                 
+            real(8)             :: ds                     
+                                                                    
+        end function
 
-        function Dr(D,S,I,HKZ,DTIZ,R,Z,IN)                   
+        function Dr(D,S,I,HKZ,DTIZ,R,Z,IN,ZKH)                   
 
-            real(8)             :: D,S,I,HKZ,DTIZ,R,Z,IN 
+            real(8)             :: D,S,I,HKZ,DTIZ,R,Z,IN,ZKH
             real(8)             :: dr                   
         
         end function
@@ -1006,15 +1006,15 @@ subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a,tie
 
     real(8), intent(inout)                  :: S,R,Z,I,IN,HKZ
     real(8), allocatable, intent(in)        :: a(:)
-    real(8), intent(in)                     :: h,TIZ,ZKH,D,BR,DTIZ,V,NAT,C
+    real(8), intent(in)                     :: h,TIZ,ZKH,D,BR,DTIZ,V,NAT,C,THKZ
     integer, intent(inout)                  :: tiempo,count
     integer, intent(in)                     :: N
 
     integer                                 :: j
     real(8)                                 :: comp
 
-    HKZ = HKZ + 0.01/(N-0.d0)
-    write(*,*) HKZ
+    !HKZ = HKZ + THKZ/(N-0.d0)
+
 !        do j=1,tiempo
  !           if((0.70d0<a(j)).and.(a(j)<1.d0)) then
  !               if(count/=10) then 
@@ -1028,12 +1028,13 @@ subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,HKZ,ZKH,D,BR,DTIZ,V,IN,NAT,C,h,a,tie
  !           endif
  !       enddo
 
-    S=S+h*ds(BR,ZKH,S,Z,D,V,I,TIZ)
+    S=S+h*ds(BR,ZKH,S,Z,D,V,I,C)
     I=I+h*di(ZKH,TIZ,D,S,Z,I,V,C)     
-    Z=Z+h*dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH,I)
-    R=R+h*Dr(D,S,I,HKZ,DTIZ,R,Z,IN)
+    Z=Z+h*dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH)
+    R=R+h*Dr(D,S,I,HKZ,DTIZ,R,Z,IN,ZKH)  
     IN=IN+h*din(IN,R,D,Z,V,I,NAT,ZKH) 
 
+    write(*,*) S,I,IN,Z
 end subroutine 
 
 !-------------------------------------------------------------------------------------------------------------
