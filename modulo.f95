@@ -963,7 +963,7 @@ subroutine Euler(Fs1,x,y,h)
 end subroutine 
     
 !-------------------------------------------------------------------------------------------------------------
-subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,THKZ,ZKH,D,DTIZ,V,IN,NAT,C,h,a,tiempo,count,N,HKZ,DES)
+subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,THKZ,ZKH,D,DTIZ,V,IN,NAT,C,h,HKZ,TV,N)
 
     interface 
 
@@ -1005,13 +1005,11 @@ subroutine Game(dr,dz,ds,di,din,S,R,Z,I,TIZ,THKZ,ZKH,D,DTIZ,V,IN,NAT,C,h,a,tiemp
     end interface
 
     real(8), intent(inout)                  :: S,R,Z,I,IN,HKZ,V
-    real(8), allocatable, intent(in)        :: a(:)
-    real(8), intent(in)                     :: h,TIZ,ZKH,D,DTIZ,NAT,C,THKZ,DES
-    integer, intent(inout)                  :: tiempo,count
+    real(8), intent(in)                     :: h,TIZ,ZKH,D,DTIZ,NAT,C,THKZ,TV
     integer, intent(in)                     :: N
 
-    HKZ = HKZ + THKZ/(N-0.d0)
-    V = V + DES/(N-0.d0)
+    HKZ = HKZ+(THKZ/(N-0.d0)) !Curva de aprendizaje (Humanos mejoran con el tiempo su hablidad para matar a zombie)
+    V = V+TV/(N-0.d0) !velocidad con la cual se crea una vacuna(cuanto más alto es TV la poblacion esta más alerta a realizar vacunas contra enfermedades)
 
     S=S+h*ds(ZKH,S,Z,D,V,I,C)
     I=I+h*di(ZKH,TIZ,D,S,Z,I,V,C)     

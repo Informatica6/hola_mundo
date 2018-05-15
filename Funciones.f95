@@ -130,39 +130,39 @@ end function
 
 !                       Zombies` Apocalypse Game
 
-    function dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH)                 ! Zombies
+    function dz(TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH)                  ! Zombies
 
-        real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH   ! V vacuna
+        real(8)             :: TIZ,I,R,S,Z,DTIZ,HKZ,V,IN,ZKH    
         real(8)             :: dz
 
-        dz = TIZ*I+DTIZ*R-HKZ*S*Z-HKZ*Z*IN-HKZ*I*Z
+        dz = TIZ*I+DTIZ*R-HKZ*Z*(S+IN+I*1.3)                    !Los infectados se camuflan entre los zombie y puede matar más
 
     end function
 
-    function ds(ZKH,S,Z,D,V,I,C)                       ! Susceptible
+    function ds(ZKH,S,Z,D,V,I,C)                                ! Susceptible
 
-        real(8)             :: S,Z,ZKH,D,V,I,C         ! ZKH zombie kills human propension marginal a que un humano sea asesinado por un zombie         
-        real(8)             :: ds 
-                                                            ! BR Personas que existen al principio
-        ds = S-ZKH*S*Z*(0.9)-D*S-C*S                    
-                                                            ! D propension marginal a morir por casusas naturales 
+        real(8)             :: S,Z,ZKH,D,V,I,C                          
+        real(8)             :: ds                               
+                                
+        ds = S-ZKH*S*Z*(0.9)-D*S-C*S                            ! No en todas las ocasiones un zombie va a matar a un humano puede herirlo                    
+                                    
     end function 
 
-    function Dr(D,S,I,HKZ,DTIZ,R,Z,IN,ZKH)                 ! Removed
+    function Dr(D,S,I,HKZ,DTIZ,R,Z,IN,ZKH)                      ! Removed
 
-        real(8)             :: D,S,I,HKZ,DTIZ,R,Z,IN,ZKH   ! DTIZ dead turns into zombie  muerto que se convierte en zombie 
-        real(8)             :: dr                       ! R eliminados 
+        real(8)             :: D,S,I,HKZ,DTIZ,R,Z,IN,ZKH         
+        real(8)             :: dr                               
 
-        dr = D*(S+IN+I)+ZKH*Z*(0.9)*(IN+I+S)-DTIZ*R
+        dr = D*(S+IN+I)+ZKH*Z*(0.9)*S-DTIZ*R+ZKH*Z*(IN+I*0.7)   !A los zombie les cuesta más matar a infectados porque les cuesta distinguirlos
 
     end function 
 
     function di(ZKH,TIZ,D,S,Z,I,V,C)                    ! Infected 
 
-        real(8)             :: ZKH,TIZ,D,S,Z,I,V,C      ! TIZ turn into zombie propension marginal a comvertirse en un zombie 
+        real(8)             :: ZKH,TIZ,D,S,Z,I,V,C      
         real(8)             :: di
 
-        di = C*S-TIZ*I-D*I-V*I+ZKH*Z*S*(0.10)           !Los infectados se camuflan entre los zombie
+        di = C*S-TIZ*I-D*I-V*I+ZKH*Z*S*(0.10)           ! NO en todas las ocasiones un zombie va a matar a un humano puede herirlo y hacer que se infecte
 
     end function 
     
@@ -171,8 +171,8 @@ end function
         real(8)             :: IN,R,D,Z,V,I,NAT,ZKH
         real(8)             :: din 
 
-        din = I*V+NAT*IN-IN*D-ZKH*IN*Z
-
+        din = I*V+NAT*IN-IN*D-ZKH*IN*Z                  ! Los inmunes tienen la posibilidad de reproducirse al estar apartados en cuarentenas 
+                                                        ! Los hijos de los inmunes son tambien inmunes 
     end function
 !____________________________________________________________________
 end module

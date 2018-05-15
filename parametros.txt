@@ -1,2 +1,20 @@
-S       R   I   Z   IN      DES         TIZ         THKZ        ZKH         D           DTIZ        NAT     C       HKZ
-500     0   0   0   10      0.01        1           0.05        0.001       0.03        0.2         0.2    1.8     -0.0003    
+S       R   I   Z   IN      TV         TIZ         THKZ        ZKH         D           DTIZ        NAT     C       HKZ
+500     30  0   0   10      0.01       1           0.05        0.001       0.03        0.2         0.2    1.8     -0.00003   
+
+
+
+Los parametros que se observan son los valores para conseguir que la humanidad se salve en 30 meses
+
+S: Supervivientes
+R: Muertos
+I: Infectados
+Z: Zombies 
+IN: Inmunes 
+TV: Tasa para encontrar una vacuna(velocidad de reaccion)
+TIZ: Velocidad con la cual un infectado se convierte en un zombie 
+THKZ: Tasa de aprendizaje a combatir a los zombie (Velocidad de aprendizaje)
+D: Coeficiente de personas (I,IN,S) mueren por causas naturales o factores externos(No implica que un zombie mate)
+DTIZ: Probabilidad de que un muerto se tranforme en un zombie 
+NAT: Natalidad de la población 
+C: velocidad de contagio 
+HKZ: valor inicial de habilidad para que un humano mate a un zombie  
